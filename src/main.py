@@ -228,9 +228,10 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01, dai
 def run_account():
     percentage_of_risk = float(input("設定每單最大虧損:(E.g 0.01 = 1% , 0.1 = 10%...ETC)\n"))
     trading_company = input("請輸入交易公司:\n")
+    daily_max_loss_percentage = float(input("設定每日最大虧損百分比:(E.g 0.05 = 5% , 0.1 = 10%...ETC)\n"))
     root = tk.Tk()
     ui = TradingBotUI(root)
-    t = Thread(target=trading_loop, args=(ui, trading_company, percentage_of_risk), daemon=True)
+    t = Thread(target=trading_loop, args=(ui, trading_company, percentage_of_risk,daily_max_loss_percentage), daemon=True)
     t.start()
     root.mainloop()
 
