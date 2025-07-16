@@ -16,9 +16,83 @@ atr_mult_tp = 4.0
 contract_size = 100
 daily_max_loss = 500  # 每日最大虧損設定
 test = False
+
+
+def move_sl_to_breakeven(position):
+        try:
+            current_price = mt5.symbol_info_tick(symbol).last
+            entry_price = position.price_open
+            current_sl = position.sl
+            current_tp = position.tp
+            
+            # 計算半個TP距離
+            if position.type == mt5.POSITION_TYPE_BUY:
+                half_tp_price = entry_price + (current_tp - entry_price) / 2
+                # 如果當前價格達到半個TP，且還沒移動到breakeven
+                if current_price >= half_tp_price and current_sl < entry_price:
+                    modify_request = {
+                        "action": mt5.TRADE_ACTION_SLTP,
+                        "symbol": symbol,
+                        "position": position.ticket,
+                        "sl": entry_price,  # 移動到breakeven
+                        "tp": current_tp,
+                    }
+                    result = mt5.order_send(modify_request)
+                    if result.retcode == mt5.TRADE_RETCODE_DONE:
+                        print(f"BUY止損已移動到breakeven: {entry_price}")
+                        return True
+            elif position.type == mt5.POSITION_TYPE_SELL:
+                    half_tp_price = entry_price - (entry_price - current_tp) / 2
+                    # 如果當前價格達到半個TP，且還沒移動到breakeven
+                    if current_price <= half_tp_price and current_sl > entry_price:
+                        modify_request = {
+                            "action": mt5.TRADE_ACTION_SLTP,
+                            "symbol": symbol,
+                            "position": position.ticket,
+                            "sl": entry_price,  # 移動到breakeven
+                            "tp": current_tp,
+                        }
+                        result = mt5.order_send(modify_request)
+                        if result.retcode == mt5.TRADE_RETCODE_DONE:
+                            print(f"SELL止損已移動到breakeven: {entry_price}")
+                            return True
+                        
+        except Exception as e:
+            print(f"移動止損失敗: {e}")
+        return False
+
+
 def get_today_pnl():
-    # 你可根據 trade_log.txt 或 MT5 歷史訂單計算今日已實現損益
-    return 0  # 這裡請自行實作
+        """
+        計算今日實際損益
+        """
+        try:
+            # 取得今日開始時間（凌晨0點）
+            today_start = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+            
+            # 取得今日的交易歷史
+            deals = mt5.history_deals_get(today_start, datetime.now())
+            if deals is None:
+                return 0
+            
+            # 計算今日總損益（只計算已平倉的交易）
+            total_pnl = 0
+            for deal in deals:
+                if deal.type in [mt5.DEAL_TYPE_BUY, mt5.DEAL_TYPE_SELL]:
+                    total_pnl += deal.profit
+            
+            # 加上目前持倉的浮動損益
+            positions = mt5.positions_get(symbol=symbol)
+            if positions:
+                for pos in positions:
+                    total_pnl += pos.profit
+            
+            return total_pnl
+        except Exception as e:
+            print(f"計算PnL失敗: {e}")
+            return 0
+        
+
 
 class TradingBotUI:
     def __init__(self, root):
@@ -48,7 +122,10 @@ class TradingBotUI:
         self.holding_text.set(f"當前持倉: {holding}")
         self.signal_text.set(f"最新信號: {signal}")
 
-def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
+
+
+    
+def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01, daily_max_loss_percentage=0.05):
     if not mt5.initialize():
         ui.update("MetaTrader 5 初始化失敗", 0, 0, "None", "None")
         return
@@ -71,6 +148,7 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
                 continue
             balance = account_info.balance
             positions = mt5.positions_get(symbol=symbol)
+
             if positions and len(positions) > 0:
                 pos_type = positions[0].type
                 if pos_type == mt5.POSITION_TYPE_BUY:
@@ -79,11 +157,12 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
                     currentHolding = "SELL"
                 else:
                     currentHolding = "None"
+                move_sl_to_breakeven(positions[0])
             else:
                 currentHolding = "None"
 
             # 風控
-            daily_max_profit_dynamic = balance * 0.05
+            daily_max_profit_dynamic = balance * daily_max_loss_percentage
             today_pnl = get_today_pnl()
             status = ""
             signal = "None"
