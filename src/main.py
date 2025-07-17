@@ -201,6 +201,7 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01, dai
             rates = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_M15, 0, 100)
             if rates is None or len(rates) < slow + 1:
                 status = "K線資料不足，等待中"
+                #change the update to include time
                 ui.update(status, today_pnl, balance, currentHolding, signal,datetime.now().strftime("%H:%M:%S"), datetime.now().strftime("%H:%M:%S"))
                 time.sleep(1)
                 continue
