@@ -1,5 +1,5 @@
 import MetaTrader5 as mt5
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 import time
 import numpy as np
 from strategy import calculate_ema, calculate_atr
@@ -64,28 +64,38 @@ def move_sl_to_breakeven(position):
 
 def get_today_pnl():
     """
-    計算今日實際損益
+    使用 MT5 服務器時間計算今日損益
     """
     try:
-        today_start = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        # 獲取 MT5 服務器當前時間
+        server_info = mt5.terminal_info()
+        if server_info is None:
+            return 0
+            
+        # 使用 UTC 時間
+        utc_now = datetime.now(timezone.utc)
+        utc_today_start = utc_now.replace(hour=0, minute=0, second=0, microsecond=0)
+        
         # 1. 今日已平倉損益
-        deals = mt5.history_deals_get(today_start, datetime.now())
+        deals = mt5.history_deals_get(utc_today_start, utc_now)
         realized_pnl = 0
         if deals:
             for deal in deals:
-                if deal.type in [mt5.DEAL_TYPE_BUY, mt5.DEAL_TYPE_SELL]:
+                if deal.symbol == symbol and deal.type in [mt5.DEAL_TYPE_BUY, mt5.DEAL_TYPE_SELL]:
                     realized_pnl += deal.profit
 
-        # 2. 今日開倉未平倉的浮動損益
+        # 2. 當前持倉浮動損益
         positions = mt5.positions_get(symbol=symbol)
         unrealized_pnl = 0
         if positions:
             for pos in positions:
-                # 只計算今日開倉的持倉
-                if pos.time >= today_start.timestamp():
+                # 檢查是否為今日開倉
+                pos_time_utc = datetime.fromtimestamp(pos.time, tz=timezone.utc)
+                if pos_time_utc >= utc_today_start:
                     unrealized_pnl += pos.profit
 
         return realized_pnl + unrealized_pnl
+        
     except Exception as e:
         print(f"計算PnL失敗: {e}")
         return 0
@@ -101,6 +111,9 @@ class TradingBotUI:
         self.holding_text = tk.StringVar()
         self.signal_text = tk.StringVar()
         self.balance_text = tk.StringVar()
+        self.time_now_text = tk.StringVar()
+        self.last_time_update_text = tk.StringVar()
+
         self.status_label = tk.Label(root, textvariable=self.status_text, font=("Arial", 12), fg="blue")
         self.status_label.pack(pady=5)
         self.pnl_label = tk.Label(root, textvariable=self.pnl_text, font=("Arial", 12))
@@ -111,19 +124,29 @@ class TradingBotUI:
         self.holding_label.pack(pady=5)
         self.signal_label = tk.Label(root, textvariable=self.signal_text, font=("Arial", 12))
         self.signal_label.pack(pady=5)
+        self.time_now_label = tk.Label(root, textvariable=self.time_now_text, font=("Arial", 12))
+        self.time_now_label.pack(pady=5)
+        self.last_time_update_label = tk.Label(root, textvariable=self.last_time_update_text, font=("Arial", 12))
+        self.last_time_update_label.pack(pady=5)
         self.status_text.set("初始化中...")
 
-    def update(self, status, pnl, balance, holding, signal):
+    def update(self, status, pnl, balance, holding, signal,time_now, last_time_update):
         self.status_text.set(status)
         self.pnl_text.set(f"今日損益: {pnl:.2f}")
         self.balance_text.set(f"帳戶餘額: {balance:.2f}")
         self.holding_text.set(f"當前持倉: {holding}")
         self.signal_text.set(f"最新信號: {signal}")
+        self.time_now_text.set(f"當前時間: {time_now}")
+        self.last_time_update_text.set(f"最後更新時間: {last_time_update}")
 
 
 
     
 def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01, daily_max_loss_percentage=0.05):
+    status = ""
+    signal = "None"
+    balance = 0
+
     if not mt5.initialize():
         ui.update("MetaTrader 5 初始化失敗", 0, 0, "None", "None")
         return
@@ -138,6 +161,10 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01, dai
 
     while True:
         now = datetime.now()
+        # 風控
+        today_pnl = get_today_pnl()
+
+        ui.update(status, today_pnl, balance, currentHolding, signal,datetime.now().strftime("%H:%M:%S"), "")
         if now.minute % 15 == 0 and now.second == 0:
             account_info = mt5.account_info()
             if account_info is None:
@@ -159,11 +186,7 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01, dai
             else:
                 currentHolding = "None"
 
-            # 風控
             daily_max_profit_dynamic = balance * daily_max_loss_percentage
-            today_pnl = get_today_pnl()
-            status = ""
-            signal = "None"
 
             if today_pnl >= daily_max_profit_dynamic:
                 status = "已達日內最大獲利，暫停交易"
@@ -190,7 +213,7 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01, dai
             atr = calculate_atr([{'high': bar['high'], 'low': bar['low'], 'close': bar['close']} for bar in rates], 14)
             
             # 訊號偵測
-            if ema_fast[-2] < ema_slow[-2] and ema_fast[-1] > ema_slow[-1]:
+            if ema_fast[-2] < ema_slow[-2] and ema_fast[-1] > ema_slow[-1] and currentHolding == "None":
                 # BUY 訊號
                 entry_price = close_prices[-1]
                 sl = entry_price - atr_mult_sl * atr[-1]
@@ -203,7 +226,7 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01, dai
                 signal = "BUY"
                 place_trade(symbol, "BUY", lot_size, sl, tp, entry_price, trading_company)
                 currentHolding = "BUY"
-            elif ema_fast[-2] > ema_slow[-2] and ema_fast[-1] < ema_slow[-1]:
+            elif ema_fast[-2] > ema_slow[-2] and ema_fast[-1] < ema_slow[-1] and currentHolding == "None":
                 # SELL 訊號
                 entry_price = close_prices[-1]
                 sl = entry_price + atr_mult_sl * atr[-1]
@@ -219,7 +242,7 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01, dai
             else:
                 status = "等待交易訊號"
 
-            ui.update(status, today_pnl, balance, currentHolding, signal)
+            ui.update(status, today_pnl, balance, currentHolding, signal,datetime.now().strftime("%H:%M:%S"), datetime.now().strftime("%H:%M:%S"))
 
         time.sleep(1)
 
