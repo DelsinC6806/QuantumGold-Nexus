@@ -190,12 +190,22 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01, dai
 
             if today_pnl >= daily_max_profit_dynamic:
                 status = "已達日內最大獲利，暫停交易"
+<<<<<<< HEAD
                 ui.update(status, today_pnl, balance, currentHolding, signal)
+=======
+                                #change the update to include time
+                ui.update(status, today_pnl, balance, currentHolding, signal,datetime.now().strftime("%H:%M:%S"), datetime.now().strftime("%H:%M:%S"))
+>>>>>>> 21adc35415830540f5a4ffd32379c23127bbbe3f
                 time.sleep(60)
                 continue
             if today_pnl <= -daily_max_loss:
                 status = "已達日內最大虧損，暫停交易"
+<<<<<<< HEAD
                 ui.update(status, today_pnl, balance, currentHolding, signal)
+=======
+                                #change the update to include time
+                ui.update(status, today_pnl, balance, currentHolding, signal,datetime.now().strftime("%H:%M:%S"), datetime.now().strftime("%H:%M:%S"))
+>>>>>>> 21adc35415830540f5a4ffd32379c23127bbbe3f
                 time.sleep(60)
                 continue
 
