@@ -63,34 +63,32 @@ def move_sl_to_breakeven(position):
 
 
 def get_today_pnl():
-        """
-        計算今日實際損益
-        """
-        try:
-            # 取得今日開始時間（凌晨0點）
-            today_start = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
-            
-            # 取得今日的交易歷史
-            deals = mt5.history_deals_get(today_start, datetime.now())
-            if deals is None:
-                return 0
-            
-            # 計算今日總損益（只計算已平倉的交易）
-            total_pnl = 0
+    """
+    計算今日實際損益
+    """
+    try:
+        today_start = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        # 1. 今日已平倉損益
+        deals = mt5.history_deals_get(today_start, datetime.now())
+        realized_pnl = 0
+        if deals:
             for deal in deals:
                 if deal.type in [mt5.DEAL_TYPE_BUY, mt5.DEAL_TYPE_SELL]:
-                    total_pnl += deal.profit
-            
-            # 加上目前持倉的浮動損益
-            positions = mt5.positions_get(symbol=symbol)
-            if positions:
-                for pos in positions:
-                    total_pnl += pos.profit
-            
-            return total_pnl
-        except Exception as e:
-            print(f"計算PnL失敗: {e}")
-            return 0
+                    realized_pnl += deal.profit
+
+        # 2. 今日開倉未平倉的浮動損益
+        positions = mt5.positions_get(symbol=symbol)
+        unrealized_pnl = 0
+        if positions:
+            for pos in positions:
+                # 只計算今日開倉的持倉
+                if pos.time >= today_start.timestamp():
+                    unrealized_pnl += pos.profit
+
+        return realized_pnl + unrealized_pnl
+    except Exception as e:
+        print(f"計算PnL失敗: {e}")
+        return 0
         
 
 
