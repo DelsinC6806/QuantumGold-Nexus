@@ -25,8 +25,8 @@ def place_trade(symbol, action, lot_size, sl_price, tp_price,price, trading_comp
         print("Invalid trade action")
         return False
 
-    
-    if trading_company == "OANDA":
+
+    if trading_company.lower() == "oanda":
         trade_request = {
             "action": mt5.TRADE_ACTION_DEAL,
             "symbol": symbol,
