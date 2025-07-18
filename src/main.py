@@ -15,6 +15,7 @@ atr_mult_sl = 1.0
 atr_mult_tp = 4.0
 contract_size = 100
 daily_max_loss = 500  # 每日最大虧損設定
+last_time_update = datetime.now().strftime("%H:%M:%S")
 test = False
 
 
@@ -30,6 +31,7 @@ def move_sl_to_breakeven(position):
                 half_tp_price = entry_price + (current_tp - entry_price) / 2
                 # 如果當前價格達到半個TP，且還沒移動到breakeven
                 if current_price >= half_tp_price and current_sl < entry_price:
+                    print(f"BUY條件檢查: 當前價格={current_price:.2f}, 半TP價格={half_tp_price:.2f}, 入場價={entry_price:.2f}, 當前止損={current_sl:.2f}")
                     modify_request = {
                         "action": mt5.TRADE_ACTION_SLTP,
                         "symbol": symbol,
@@ -45,6 +47,7 @@ def move_sl_to_breakeven(position):
                     half_tp_price = entry_price - (entry_price - current_tp) / 2
                     # 如果當前價格達到半個TP，且還沒移動到breakeven
                     if current_price <= half_tp_price and current_sl > entry_price:
+                        print(f"SELL條件檢查: 當前價格={current_price:.2f}, 半TP價格={half_tp_price:.2f}, 入場價={entry_price:.2f}, 當前止損={current_sl:.2f}")
                         modify_request = {
                             "action": mt5.TRADE_ACTION_SLTP,
                             "symbol": symbol,
@@ -97,10 +100,34 @@ def get_today_pnl():
         return realized_pnl + unrealized_pnl
         
     except Exception as e:
+
         print(f"計算PnL失敗: {e}")
         return 0
         
-
+def get_trade_count():
+    """
+    獲取今日交易次數
+    """
+    try:
+        # 獲取 MT5 服務器當前時間
+        server_info = mt5.terminal_info()
+        if server_info is None:
+            return 0
+            
+        # 使用 UTC 時間
+        utc_now = datetime.now(timezone.utc)
+        utc_today_start = utc_now.replace(hour=0, minute=0, second=0, microsecond=0)
+        
+        # 獲取今日的交易歷史
+        trades = mt5.history_trades_get(utc_today_start, utc_now)
+        if trades is None:
+            return 0
+            
+        return len(trades)
+        
+    except Exception as e:
+        print(f"獲取交易次數失敗: {e}")
+        return 0
 
 class TradingBotUI:
     def __init__(self, root):
@@ -113,6 +140,7 @@ class TradingBotUI:
         self.balance_text = tk.StringVar()
         self.time_now_text = tk.StringVar()
         self.last_time_update_text = tk.StringVar()
+        self.trade_count_text = tk.StringVar()
 
         self.status_label = tk.Label(root, textvariable=self.status_text, font=("Arial", 12), fg="blue")
         self.status_label.pack(pady=5)
@@ -128,6 +156,8 @@ class TradingBotUI:
         self.time_now_label.pack(pady=5)
         self.last_time_update_label = tk.Label(root, textvariable=self.last_time_update_text, font=("Arial", 12))
         self.last_time_update_label.pack(pady=5)
+        self.trade_count_label = tk.Label(root, textvariable=self.trade_count_text, font=("Arial", 12))
+        self.trade_count_label.pack(pady=5)
         self.status_text.set("初始化中...")
 
     def update(self, status, pnl, balance, holding, signal,time_now, last_time_update):
@@ -138,6 +168,7 @@ class TradingBotUI:
         self.signal_text.set(f"最新信號: {signal}")
         self.time_now_text.set(f"當前時間: {time_now}")
         self.last_time_update_text.set(f"最後更新時間: {last_time_update}")
+        self.trade_count_text.set(f"交易次數: {self.get_trade_count()}")
 
 
 
@@ -146,7 +177,7 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01, dai
     status = ""
     signal = "None"
     balance = 0
-
+    today_pnl = get_today_pnl()
     if not mt5.initialize():
         ui.update("MetaTrader 5 初始化失敗", 0, 0, "None", "None")
         return
@@ -162,11 +193,10 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01, dai
     while True:
         now = datetime.now()
         # 風控
-        today_pnl = get_today_pnl()
-
-        ui.update(status, today_pnl, balance, currentHolding, signal,datetime.now().strftime("%H:%M:%S"), "")
+        ui.update(status, today_pnl, balance, currentHolding, signal,datetime.now().strftime("%H:%M:%S"), last_time_update)
         if now.minute % 15 == 0 and now.second == 0:
             account_info = mt5.account_info()
+            last_time_update=datetime.now().strftime("%H:%M:%S")
             if account_info is None:
                 ui.update("取得帳戶資訊失敗", 0, 0, currentHolding, "None")
                 time.sleep(1)
@@ -191,13 +221,13 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01, dai
             if today_pnl >= daily_max_profit_dynamic:
                 status = "已達日內最大獲利，暫停交易"
                 ui.update(status, today_pnl, balance, currentHolding, signal,datetime.
-                          now().strftime("%H:%M:%S"), datetime.now().strftime("%H:%M:%S"))
+                          now().strftime("%H:%M:%S"), last_time_update)
                 time.sleep(60)
                 continue
             if today_pnl <= -daily_max_loss:
                 status = "已達日內最大虧損，暫停交易"
                 ui.update(status, today_pnl, balance, currentHolding, signal,datetime.
-                          now().strftime("%H:%M:%S"), datetime.now().strftime("%H:%M:%S"))
+                          now().strftime("%H:%M:%S"), last_time_update)
                 time.sleep(60)
                 continue
 
@@ -206,7 +236,7 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01, dai
             if rates is None or len(rates) < slow + 1:
                 status = "K線資料不足，等待中"
                 ui.update(status, today_pnl, balance, currentHolding, signal,datetime.
-                          now().strftime("%H:%M:%S"), datetime.now().strftime("%H:%M:%S"))
+                          now().strftime("%H:%M:%S"), last_time_update)
                 time.sleep(1)
                 continue
 
@@ -245,7 +275,7 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01, dai
             else:
                 status = "等待交易訊號"
 
-            ui.update(status, today_pnl, balance, currentHolding, signal,datetime.now().strftime("%H:%M:%S"), datetime.now().strftime("%H:%M:%S"))
+            ui.update(status, today_pnl, balance, currentHolding, signal,datetime.now().strftime("%H:%M:%S"), last_time_update)
 
         time.sleep(1)
 
