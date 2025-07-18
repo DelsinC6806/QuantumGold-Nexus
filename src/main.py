@@ -190,22 +190,14 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01, dai
 
             if today_pnl >= daily_max_profit_dynamic:
                 status = "已達日內最大獲利，暫停交易"
-<<<<<<< HEAD
-                ui.update(status, today_pnl, balance, currentHolding, signal)
-=======
-                                #change the update to include time
-                ui.update(status, today_pnl, balance, currentHolding, signal,datetime.now().strftime("%H:%M:%S"), datetime.now().strftime("%H:%M:%S"))
->>>>>>> 21adc35415830540f5a4ffd32379c23127bbbe3f
+                ui.update(status, today_pnl, balance, currentHolding, signal,datetime.
+                          now().strftime("%H:%M:%S"), datetime.now().strftime("%H:%M:%S"))
                 time.sleep(60)
                 continue
             if today_pnl <= -daily_max_loss:
                 status = "已達日內最大虧損，暫停交易"
-<<<<<<< HEAD
-                ui.update(status, today_pnl, balance, currentHolding, signal)
-=======
-                                #change the update to include time
-                ui.update(status, today_pnl, balance, currentHolding, signal,datetime.now().strftime("%H:%M:%S"), datetime.now().strftime("%H:%M:%S"))
->>>>>>> 21adc35415830540f5a4ffd32379c23127bbbe3f
+                ui.update(status, today_pnl, balance, currentHolding, signal,datetime.
+                          now().strftime("%H:%M:%S"), datetime.now().strftime("%H:%M:%S"))
                 time.sleep(60)
                 continue
 
@@ -213,7 +205,8 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01, dai
             rates = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_M15, 0, 100)
             if rates is None or len(rates) < slow + 1:
                 status = "K線資料不足，等待中"
-                ui.update(status, today_pnl, balance, currentHolding, signal)
+                ui.update(status, today_pnl, balance, currentHolding, signal,datetime.
+                          now().strftime("%H:%M:%S"), datetime.now().strftime("%H:%M:%S"))
                 time.sleep(1)
                 continue
 
