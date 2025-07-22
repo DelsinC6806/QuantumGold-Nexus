@@ -458,7 +458,7 @@ def get_today_pnl(server_info):
         realized_pnl = 0
         if deals:
             for deal in deals:
-                if deal.symbol == symbol and deal.type in [mt5.DEAL_TYPE_BUY, mt5.DEAL_TYPE_SELL] and deal.reason != 1:
+                if deal.symbol == symbol and deal.type in [mt5.DEAL_TYPE_BUY, mt5.DEAL_TYPE_SELL] and (deal.reason == 4 or deal.reason == 5 or deal.reason == 6):
                     # 確認交易是今日發生的
                     deal_time = datetime.fromtimestamp(deal.time)
                     if deal_time.date() == today:
@@ -494,7 +494,7 @@ def get_trade_count(server_info):
         
         # 獲取今日的交易歷史
         trades = mt5.history_deals_get(today_start, now)
-        trades = [trade for trade in trades if trade.reason == 1]
+        trades = [trade for trade in trades if trade.reason == 0 or trade.reason == 1 or trade.reason == 2]  # 只計算手動交易
         if trades is None:
             return 0
             
