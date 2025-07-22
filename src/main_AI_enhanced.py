@@ -440,41 +440,43 @@ def move_sl_to_breakeven(position):
             print(f"移動止損失敗: {e}")
         return False
 
-
 def get_today_pnl(server_info):
     """
-    使用 MT5 服務器時間計算今日損益
+    使用日期計算今日損益 (簡化版本)
     """
     try:
         if server_info is None:
             return 0
             
-        # 使用 UTC 時間
-        utc_now = datetime.now(timezone.utc)
-        utc_today_start = utc_now.replace(hour=0, minute=0, second=0, microsecond=0)
-        
+        # 使用當地時間的今日開始時間 (00:00:00)
+        today = datetime.now().date()
+        today_start = datetime.combine(today, datetime.min.time())
+        now = datetime.now() + timedelta(days=1)
+
         # 1. 今日已平倉損益
-        deals = mt5.history_deals_get(utc_today_start, utc_now)
+        deals = mt5.history_deals_get(today_start, now)
         realized_pnl = 0
         if deals:
             for deal in deals:
-                if deal.symbol == symbol and deal.type in [mt5.DEAL_TYPE_BUY, mt5.DEAL_TYPE_SELL]:
-                    realized_pnl += deal.profit
+                if deal.symbol == symbol and deal.type in [mt5.DEAL_TYPE_BUY, mt5.DEAL_TYPE_SELL] and deal.reason != 1:
+                    # 確認交易是今日發生的
+                    deal_time = datetime.fromtimestamp(deal.time)
+                    if deal_time.date() == today:
+                        realized_pnl += deal.profit
 
-        # 2. 當前持倉浮動損益
+        # 2. 當前持倉浮動損益 (只計算今日開倉的)
         positions = mt5.positions_get(symbol=symbol)
         unrealized_pnl = 0
         if positions:
             for pos in positions:
                 # 檢查是否為今日開倉
-                pos_time_utc = datetime.fromtimestamp(pos.time, tz=timezone.utc)
-                if pos_time_utc >= utc_today_start:
+                pos_time = datetime.fromtimestamp(pos.time)
+                if pos_time.date() == today:
                     unrealized_pnl += pos.profit
 
         return realized_pnl + unrealized_pnl
         
     except Exception as e:
-
         print(f"計算PnL失敗: {e}")
         return 0
         
@@ -486,12 +488,13 @@ def get_trade_count(server_info):
         if server_info is None:
             return 0
             
-        # 使用 UTC 時間
-        utc_now = datetime.now(timezone.utc)
-        utc_today_start = utc_now.replace(hour=0, minute=0, second=0, microsecond=0)
+        today = datetime.now().date()
+        today_start = datetime.combine(today, datetime.min.time())
+        now = datetime.now() + timedelta(days=1)
         
         # 獲取今日的交易歷史
-        trades = mt5.history_deals_get(utc_today_start, utc_now)
+        trades = mt5.history_deals_get(today_start, now)
+        trades = [trade for trade in trades if trade.reason == 1]
         if trades is None:
             return 0
             
