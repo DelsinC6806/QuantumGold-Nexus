@@ -494,7 +494,7 @@ def get_trade_count(server_info):
         
         # 獲取今日的交易歷史
         trades = mt5.history_deals_get(today_start, now)
-        trades = [trade for trade in trades if trade.reason == 0 or trade.reason == 1 or trade.reason == 2]  # 只計算手動交易
+        trades = [trade for trade in trades if trade.reason == 0 or trade.reason == 1 or trade.reason == 2 or trade.reason == 3]  # 只計算手動交易
         if trades is None:
             return 0
             
