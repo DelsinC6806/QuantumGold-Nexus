@@ -1,0 +1,121 @@
+# Python 相關
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# 虛擬環境
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE 相關
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# 環境變數文件
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 數據文件 (通常很大，不適合版本控制)
+*.csv
+*.pkl
+*.pickle
+*.h5
+*.hdf5
+*.parquet
+
+# 圖片輸出文件
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.tiff
+
+# 日誌文件
+*.log
+*.txt
+
+# 臨時文件
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# OS 相關
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# MetaTrader 相關
+*.ex4
+*.ex5
+*.mq4
+*.mq5
+
+# 編譯後的文件
+*.pyc
+*.pyo
+*.pyd
+*.dll
+
+# 測試覆蓋率
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# 文檔建置
+docs/_build/
+
+# 其他
+.mypy_cache/
+.dmypy.json
+dmypy.json
