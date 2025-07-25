@@ -119,3 +119,7 @@ docs/_build/
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+# 忽略特定的配置文件
+src/__pycache__
+trade_log.txt

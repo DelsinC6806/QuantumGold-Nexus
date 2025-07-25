@@ -18,7 +18,7 @@ def backtest_dual_ema_atr(
     fast=5, 
     slow=15, 
     atr_mult_sl=1.0, 
-    atr_mult_tp=4.0,
+    atr_mult_tp=3.0,
     contract_size=100,
     daily_max_loss=500
 ):
@@ -129,8 +129,81 @@ def backtest_dual_ema_atr(
                 position = None
     df = pd.DataFrame(results)
     df.to_csv("backtest_trades.csv", index=False)
+    
+    # 計算勝率統計
+    total_trades = len(df)
+    winning_trades = len(df[df['pnl'] > 0])
+    losing_trades = len(df[df['pnl'] < 0])
+    win_rate = (winning_trades / total_trades * 100) if total_trades > 0 else 0
+    
+    # 計算平均獲利/虧損
+    avg_win = df[df['pnl'] > 0]['pnl'].mean() if winning_trades > 0 else 0
+    avg_loss = df[df['pnl'] < 0]['pnl'].mean() if losing_trades > 0 else 0
+    
+    # 計算獲利因子
+    total_profit = df[df['pnl'] > 0]['pnl'].sum()
+    total_loss = abs(df[df['pnl'] < 0]['pnl'].sum())
+    profit_factor = (total_profit / total_loss) if total_loss > 0 else float('inf')
+    
+    # 計算連續虧損和連續獲利
+    def calculate_consecutive_streaks(pnl_series):
+        if len(pnl_series) == 0:
+            return 0, 0, 0, 0
+            
+        wins = (pnl_series > 0).astype(int)
+        losses = (pnl_series < 0).astype(int)
+        
+        # 計算連續獲利
+        win_streaks = []
+        current_win_streak = 0
+        for win in wins:
+            if win == 1:
+                current_win_streak += 1
+            else:
+                if current_win_streak > 0:
+                    win_streaks.append(current_win_streak)
+                current_win_streak = 0
+        if current_win_streak > 0:
+            win_streaks.append(current_win_streak)
+            
+        # 計算連續虧損
+        loss_streaks = []
+        current_loss_streak = 0
+        for loss in losses:
+            if loss == 1:
+                current_loss_streak += 1
+            else:
+                if current_loss_streak > 0:
+                    loss_streaks.append(current_loss_streak)
+                current_loss_streak = 0
+        if current_loss_streak > 0:
+            loss_streaks.append(current_loss_streak)
+            
+        max_consecutive_wins = max(win_streaks) if win_streaks else 0
+        max_consecutive_losses = max(loss_streaks) if loss_streaks else 0
+        avg_consecutive_wins = sum(win_streaks) / len(win_streaks) if win_streaks else 0
+        avg_consecutive_losses = sum(loss_streaks) / len(loss_streaks) if loss_streaks else 0
+        
+        return max_consecutive_wins, max_consecutive_losses, avg_consecutive_wins, avg_consecutive_losses
+    
+    max_consec_wins, max_consec_losses, avg_consec_wins, avg_consec_losses = calculate_consecutive_streaks(df['pnl'])
+    
     print(df)
-    print(f"Final balance: {balance:.2f} | Return: {((balance-initial_balance)/initial_balance)*100:.2f}%")
+    print("\n=== 回測結果統計 ===")
+    print(f"Final balance: {balance:.2f}")
+    print(f"Return: {((balance-initial_balance)/initial_balance)*100:.2f}%")
+    print(f"Total trades: {total_trades}")
+    print(f"Winning trades: {winning_trades}")
+    print(f"Losing trades: {losing_trades}")
+    print(f"Win rate: {win_rate:.2f}%")
+    print(f"Average win: {avg_win:.2f}")
+    print(f"Average loss: {avg_loss:.2f}")
+    print(f"Profit factor: {profit_factor:.2f}")
+    print(f"\n=== 連續交易統計 ===")
+    print(f"Max consecutive wins: {max_consec_wins}")
+    print(f"Max consecutive losses: {max_consec_losses}")
+    print(f"Average consecutive wins: {avg_consec_wins:.2f}")
+    print(f"Average consecutive losses: {avg_consec_losses:.2f}")
     return df
 
 if __name__ == "__main__":
@@ -138,11 +211,11 @@ if __name__ == "__main__":
     data = data.to_dict('records')
     backtest_dual_ema_atr(
         data,
-        initial_balance=10000,
+        initial_balance=500000,
         fast=5,
-        slow=15,
-        atr_mult_sl=0.5,
-        atr_mult_tp=3.0,
-        contract_size=100,
-        daily_max_loss=500
+        slow=20,
+        atr_mult_sl=1,
+        atr_mult_tp=3,
+        contract_size=5000,
+        daily_max_loss=25000
     )
