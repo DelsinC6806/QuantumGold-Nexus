@@ -208,8 +208,8 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01, dai
         now = datetime.now()
         # 風控
         ui.update(status, today_pnl, balance, currentHolding, signal,datetime.now().strftime("%H:%M:%S"), last_time_update,trade_count)
-        if now.minute % 1 == 0:
-        #if now.minute % 15 == 0 and (now.second == 0 or now.second == 1 or now.second == 2):
+        #if now.minute % 1 == 0:
+        if now.minute % 15 == 0 and (now.second == 0 or now.second == 1 or now.second == 2):
             account_info = mt5.account_info()
             server_info = mt5.terminal_info()
             if account_info is None:
