@@ -12,7 +12,7 @@ symbol = "XAUUSD"
 fast = 5
 slow = 20
 atr_mult_sl = 1.0
-atr_mult_tp = 3.0
+atr_mult_tp = 2.0
 contract_size = 100
 daily_max_loss = 500  # 每日最大虧損設定
 
@@ -21,17 +21,20 @@ test = False
 
 def move_sl_to_breakeven(position):
         try:
-            current_price = mt5.symbol_info_tick(symbol).last
+            rates = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_M15, 0, 100)
+            close_prices = [bar['close'] for bar in rates]
+            current_price = close_prices[-1]
             entry_price = position.price_open
             current_sl = position.sl
             current_tp = position.tp
-            
+            print('當前價格:', current_price, '入場價:', entry_price, '當前止損:', current_sl, '當前止盈:', current_tp)
             # 計算半個TP距離
             if position.type == mt5.POSITION_TYPE_BUY:
                 half_tp_price = entry_price + (current_tp - entry_price) / 2
                 # 如果當前價格達到半個TP，且還沒移動到breakeven
+                print(f"BUY條件檢查: 當前價格={current_price:.2f}, 半TP價格={half_tp_price:.2f}, 入場價={entry_price:.2f}, 當前止損={current_sl:.2f}")
                 if current_price >= half_tp_price and current_sl < entry_price:
-                    print(f"BUY條件檢查: 當前價格={current_price:.2f}, 半TP價格={half_tp_price:.2f}, 入場價={entry_price:.2f}, 當前止損={current_sl:.2f}")
+
                     modify_request = {
                         "action": mt5.TRADE_ACTION_SLTP,
                         "symbol": symbol,
@@ -46,8 +49,9 @@ def move_sl_to_breakeven(position):
             elif position.type == mt5.POSITION_TYPE_SELL:
                     half_tp_price = entry_price - (entry_price - current_tp) / 2
                     # 如果當前價格達到半個TP，且還沒移動到breakeven
+                    print(f"SELL條件檢查: 當前價格={current_price:.2f}, 半TP價格={half_tp_price:.2f}, TP價格={position.tp}, 入場價={entry_price:.2f}, 當前止損={current_sl:.2f}")
                     if current_price <= half_tp_price and current_sl > entry_price:
-                        print(f"SELL條件檢查: 當前價格={current_price:.2f}, 半TP價格={half_tp_price:.2f}, 入場價={entry_price:.2f}, 當前止損={current_sl:.2f}")
+
                         modify_request = {
                             "action": mt5.TRADE_ACTION_SLTP,
                             "symbol": symbol,
@@ -113,12 +117,13 @@ def get_trade_count(server_info):
         # 使用 UTC 時間
         utc_now = datetime.now(timezone.utc)
         utc_today_start = utc_now.replace(hour=0, minute=0, second=0, microsecond=0)
-        
         # 獲取今日的交易歷史
-        trades = mt5.history_deals_get(utc_today_start, utc_now)
+        trades = mt5.history_deals_get(utc_today_start, utc_now)  
+        trades = [trade for trade in trades if (trade.reason == 0 or trade.reason == 1 or trade.reason == 2 or trade.reason == 3) and trade.magic == 123456]
+
         if trades is None:
             return 0
-            
+
         return len(trades)
         
     except Exception as e:
@@ -132,11 +137,12 @@ def get_current_holding():
     positions = mt5.positions_get(symbol=symbol)
     if positions and len(positions) > 0:
         pos_type = positions[0].type
+        move_sl_to_breakeven(positions[0])
         if pos_type == mt5.POSITION_TYPE_BUY:
             return "BUY"
         elif pos_type == mt5.POSITION_TYPE_SELL:
             return "SELL"
-        move_sl_to_breakeven(positions[0])
+
     return "None"
 
 class TradingBotUI:
@@ -202,7 +208,8 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01, dai
         now = datetime.now()
         # 風控
         ui.update(status, today_pnl, balance, currentHolding, signal,datetime.now().strftime("%H:%M:%S"), last_time_update,trade_count)
-        if now.minute % 15 == 0 and (now.second == 0 or now.second == 1 or now.second == 2):
+        if now.minute % 1 == 0:
+        #if now.minute % 15 == 0 and (now.second == 0 or now.second == 1 or now.second == 2):
             account_info = mt5.account_info()
             server_info = mt5.terminal_info()
             if account_info is None:

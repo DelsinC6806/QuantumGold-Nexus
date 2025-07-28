@@ -16,9 +16,9 @@ def backtest_dual_ema_atr(
     data, 
     initial_balance=10000, 
     fast=5, 
-    slow=15, 
-    atr_mult_sl=1.0, 
-    atr_mult_tp=3.0,
+    slow=20, 
+    atr_mult_sl=1, 
+    atr_mult_tp=3,
     contract_size=100,
     daily_max_loss=500
 ):
@@ -210,12 +210,5 @@ if __name__ == "__main__":
     data = pd.read_csv("history_data.csv")
     data = data.to_dict('records')
     backtest_dual_ema_atr(
-        data,
-        initial_balance=500000,
-        fast=5,
-        slow=20,
-        atr_mult_sl=1,
-        atr_mult_tp=3,
-        contract_size=5000,
-        daily_max_loss=25000
+        data
     )
