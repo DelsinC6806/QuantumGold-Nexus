@@ -12,7 +12,7 @@ symbol = "XAUUSD"
 fast = 5
 slow = 20
 atr_mult_sl = 1.0
-atr_mult_tp = 2.0
+atr_mult_tp = 3.0
 contract_size = 100
 daily_max_loss = 500  # 每日最大虧損設定
 
@@ -106,29 +106,6 @@ def get_today_pnl(server_info):
         print(f"計算PnL失敗: {e}")
         return 0
         
-def get_trade_count(server_info):
-    """
-    獲取今日交易次數
-    """
-    try:
-        if server_info is None:
-            return 0
-            
-        # 使用 UTC 時間
-        utc_now = datetime.now(timezone.utc)
-        utc_today_start = utc_now.replace(hour=0, minute=0, second=0, microsecond=0)
-        # 獲取今日的交易歷史
-        trades = mt5.history_deals_get(utc_today_start, utc_now)  
-        trades = [trade for trade in trades if (trade.reason == 0 or trade.reason == 1 or trade.reason == 2 or trade.reason == 3) and trade.magic == 123456]
-
-        if trades is None:
-            return 0
-
-        return len(trades)
-        
-    except Exception as e:
-        print(f"獲取交易次數失敗: {e}")
-        return 0
     
 def get_current_holding():
     """
@@ -150,9 +127,7 @@ class TradingBotUI:
         self.root = root
         self.root.title("StrategyBasedBOT 狀態面板")
         self.status_text = tk.StringVar()
-        self.pnl_text = tk.StringVar()
         self.holding_text = tk.StringVar()
-        self.signal_text = tk.StringVar()
         self.balance_text = tk.StringVar()
         self.time_now_text = tk.StringVar()
         self.last_time_update_text = tk.StringVar()
@@ -160,14 +135,10 @@ class TradingBotUI:
 
         self.status_label = tk.Label(root, textvariable=self.status_text, font=("Arial", 12), fg="blue")
         self.status_label.pack(pady=5)
-        self.pnl_label = tk.Label(root, textvariable=self.pnl_text, font=("Arial", 12))
-        self.pnl_label.pack(pady=5)
         self.balance_label = tk.Label(root, textvariable=self.balance_text, font=("Arial", 12))
         self.balance_label.pack(pady=5)
         self.holding_label = tk.Label(root, textvariable=self.holding_text, font=("Arial", 12))
         self.holding_label.pack(pady=5)
-        self.signal_label = tk.Label(root, textvariable=self.signal_text, font=("Arial", 12))
-        self.signal_label.pack(pady=5)
         self.time_now_label = tk.Label(root, textvariable=self.time_now_text, font=("Arial", 12))
         self.time_now_label.pack(pady=5)
         self.last_time_update_label = tk.Label(root, textvariable=self.last_time_update_text, font=("Arial", 12))
@@ -176,42 +147,33 @@ class TradingBotUI:
         self.trade_count_label.pack(pady=5)
         self.status_text.set("初始化中...")
 
-    def update(self, status, pnl, balance, holding, signal,time_now, last_time_update,trade_count=0):
+    def update(self, status, balance, holding,time_now, last_time_update,trade_count=0):
         self.status_text.set(status)
-        self.pnl_text.set(f"今日損益: {pnl:.2f}")
         self.balance_text.set(f"帳戶餘額: {balance:.2f}")
         self.holding_text.set(f"當前持倉: {holding}")
-        self.signal_text.set(f"最新信號: {signal}")
         self.time_now_text.set(f"當前時間: {time_now}")
         self.last_time_update_text.set(f"最後更新時間: {last_time_update}")
         self.trade_count_text.set(f"交易次數: {trade_count}")
 
-
-
-    
-def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01, daily_max_loss_percentage=0.05): 
+def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01): 
     if not mt5.initialize():
         ui.update("MetaTrader 5 初始化失敗", 0, 0, "None", "None")
         return
     account_info = mt5.account_info()
-    server_info = mt5.terminal_info()
     status = ""
-    signal = "None"
     balance = account_info.balance if account_info else 0
-    today_pnl = get_today_pnl(server_info)
-    trade_count = get_trade_count(server_info)
+    trade_count = len(mt5.history_orders_get(datetime.now() - timedelta(days=1), datetime.now(), symbol=symbol))
     currentHolding = get_current_holding()
     last_time_update = datetime.now().strftime("%H:%M:%S")
-    ui.update(status, today_pnl, balance, currentHolding, signal,datetime.now().strftime("%H:%M:%S"), last_time_update,trade_count)
+    ui.update(status, balance, currentHolding, datetime.now().strftime("%H:%M:%S"), last_time_update,trade_count)
 
     while True:
         now = datetime.now()
         # 風控
-        ui.update(status, today_pnl, balance, currentHolding, signal,datetime.now().strftime("%H:%M:%S"), last_time_update,trade_count)
+        ui.update(status, balance, currentHolding, datetime.now().strftime("%H:%M:%S"), last_time_update,trade_count)
         #if now.minute % 1 == 0:
         if now.minute % 15 == 0 and (now.second == 0 or now.second == 1 or now.second == 2):
             account_info = mt5.account_info()
-            server_info = mt5.terminal_info()
             if account_info is None:
                 ui.update("取得帳戶資訊失敗", 0, 0, currentHolding, "None")
                 time.sleep(1)
@@ -222,21 +184,11 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01, dai
 
             # 15 minutes checking
             last_time_update=datetime.now().strftime("%H:%M:%S")
-            trade_count = get_trade_count(server_info)
             balance = account_info.balance  
             currentHolding = get_current_holding()
-
-            daily_max_profit_dynamic = balance * daily_max_loss_percentage
-
-            if today_pnl >= daily_max_profit_dynamic:
-                status = "已達日內最大獲利，暫停交易"
-                ui.update(status, today_pnl, balance, currentHolding, signal,datetime.
-                          now().strftime("%H:%M:%S"), last_time_update,trade_count)
-                time.sleep(60)
-                continue
-            if today_pnl <= -daily_max_loss:
-                status = "已達日內最大虧損，暫停交易"
-                ui.update(status, today_pnl, balance, currentHolding, signal,datetime.
+            if trade_count >= 2:
+                status = "已達日內最大交易數，暫停交易"
+                ui.update(status, balance, currentHolding, datetime.
                           now().strftime("%H:%M:%S"), last_time_update,trade_count)
                 time.sleep(60)
                 continue
@@ -245,7 +197,7 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01, dai
             rates = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_M15, 0, 100)
             if rates is None or len(rates) < slow + 1:
                 status = "K線資料不足，等待中"
-                ui.update(status, today_pnl, balance, currentHolding, signal,datetime.
+                ui.update(status, balance, currentHolding, datetime.
                           now().strftime("%H:%M:%S"), last_time_update,trade_count)
                 time.sleep(1)
                 continue
@@ -269,6 +221,7 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01, dai
                 signal = "BUY"
                 place_trade(symbol, "BUY", lot_size, sl, tp, entry_price, trading_company)
                 currentHolding = "BUY"
+                trade_count += 1
             elif ema_fast[-2] > ema_slow[-2] and ema_fast[-1] < ema_slow[-1] and currentHolding == "None":
                 # SELL 訊號
                 entry_price = close_prices[-1]
@@ -282,20 +235,20 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01, dai
                 signal = "SELL"
                 place_trade(symbol, "SELL", lot_size, sl, tp, entry_price, trading_company)
                 currentHolding = "SELL"
+                trade_count += 1
             else:
                 status = "等待交易訊號"
 
-            ui.update(status, today_pnl, balance, currentHolding, signal,datetime.now().strftime("%H:%M:%S"), last_time_update,trade_count)
+            ui.update(status, balance, currentHolding, datetime.now().strftime("%H:%M:%S"), last_time_update,trade_count)
 
         time.sleep(1)
 
 def run_account():
     percentage_of_risk = float(input("設定每單最大虧損:(E.g 0.01 = 1% , 0.1 = 10%...ETC)\n"))
     trading_company = input("請輸入交易公司:\n")
-    daily_max_loss_percentage = float(input("設定每日最大虧損百分比:(E.g 0.05 = 5% , 0.1 = 10%...ETC)\n"))
     root = tk.Tk()
     ui = TradingBotUI(root)
-    t = Thread(target=trading_loop, args=(ui, trading_company, percentage_of_risk,daily_max_loss_percentage), daemon=True)
+    t = Thread(target=trading_loop, args=(ui, trading_company, percentage_of_risk), daemon=True)
     t.start()
     root.mainloop()
 
