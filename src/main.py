@@ -11,63 +11,10 @@ from multiprocessing import Process
 symbol = "XAUUSD"
 fast = 5
 slow = 20
-atr_mult_sl = 1.2
-atr_mult_tp = 1.5
+atr_mult_sl = 1.0
+atr_mult_tp = 3.5
 contract_size = 100
-daily_max_loss = 500  # 每日最大虧損設定
 
-test = False
-
-
-def move_sl_to_breakeven(position):
-        try:
-            rates = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_M15, 0, 100)
-            close_prices = [bar['close'] for bar in rates]
-            current_price = close_prices[-1]
-            entry_price = position.price_open
-            current_sl = position.sl
-            current_tp = position.tp
-            print('當前價格:', current_price, '入場價:', entry_price, '當前止損:', current_sl, '當前止盈:', current_tp)
-            # 計算半個TP距離
-            if position.type == mt5.POSITION_TYPE_BUY:
-                half_tp_price = entry_price + (current_tp - entry_price) / 2
-                # 如果當前價格達到半個TP，且還沒移動到breakeven
-                print(f"BUY條件檢查: 當前價格={current_price:.2f}, 半TP價格={half_tp_price:.2f}, 入場價={entry_price:.2f}, 當前止損={current_sl:.2f}")
-                if current_price >= half_tp_price and current_sl < entry_price:
-
-                    modify_request = {
-                        "action": mt5.TRADE_ACTION_SLTP,
-                        "symbol": symbol,
-                        "position": position.ticket,
-                        "sl": entry_price,  # 移動到breakeven
-                        "tp": current_tp,
-                    }
-                    result = mt5.order_send(modify_request)
-                    if result.retcode == mt5.TRADE_RETCODE_DONE:
-                        print(f"BUY止損已移動到breakeven: {entry_price}")
-                        return True
-            elif position.type == mt5.POSITION_TYPE_SELL:
-                    half_tp_price = entry_price - (entry_price - current_tp) / 2
-                    # 如果當前價格達到半個TP，且還沒移動到breakeven
-                    print(f"SELL條件檢查: 當前價格={current_price:.2f}, 半TP價格={half_tp_price:.2f}, TP價格={position.tp}, 入場價={entry_price:.2f}, 當前止損={current_sl:.2f}")
-                    if current_price <= half_tp_price and current_sl > entry_price:
-
-                        modify_request = {
-                            "action": mt5.TRADE_ACTION_SLTP,
-                            "symbol": symbol,
-                            "position": position.ticket,
-                            "sl": entry_price,  # 移動到breakeven
-                            "tp": current_tp,
-                        }
-                        result = mt5.order_send(modify_request)
-                        if result.retcode == mt5.TRADE_RETCODE_DONE:
-                            print(f"SELL止損已移動到breakeven: {entry_price}")
-                            return True
-                        
-        except Exception as e:
-            print(f"移動止損失敗: {e}")
-        return False
-    
 def get_current_holding():
     """
     獲取當前持倉狀態
@@ -75,7 +22,6 @@ def get_current_holding():
     positions = mt5.positions_get(symbol=symbol)
     if positions and len(positions) > 0:
         pos_type = positions[0].type
-        move_sl_to_breakeven(positions[0])
         if pos_type == mt5.POSITION_TYPE_BUY:
             return "BUY"
         elif pos_type == mt5.POSITION_TYPE_SELL:
@@ -112,7 +58,7 @@ class TradingBotUI:
         self.status_text.set(status)
         self.balance_text.set(f"帳戶餘額: {balance:.2f}")
         self.holding_text.set(f"當前持倉: {holding}")
-        self.time_now_text.set(f"當前時間: {time_now}")
+        self.time_now_text.set(f"伺服器時間: {time_now}")
         self.last_time_update_text.set(f"最後更新時間: {last_time_update}")
         self.trade_count_text.set(f"交易次數: {trade_count}")
 
@@ -124,19 +70,19 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
     status = ""
     balance = account_info.balance if account_info else 0
     trade_count = len(mt5.history_orders_get(datetime.now() - timedelta(days=1), datetime.now(), symbol=symbol))
-    currentHolding = get_current_holding()
+    position = get_current_holding()
     last_time_update = datetime.now().strftime("%H:%M:%S")
-    ui.update(status, balance, currentHolding, datetime.now().strftime("%H:%M:%S"), last_time_update,trade_count)
+    signal = 0
+    ui.update(status, balance, position, datetime.now().strftime("%H:%M:%S"), last_time_update,trade_count)
 
     while True:
-        now = datetime.now()
-        # 風控
-        ui.update(status, balance, currentHolding, datetime.now().strftime("%H:%M:%S"), last_time_update,trade_count)
-        #if now.minute % 1 == 0:
+
+        now = datetime.fromtimestamp(mt5.symbol_info_tick(symbol).time)
+        ui.update(status, balance, position, now, last_time_update,trade_count)
         if now.minute % 15 == 0 and (now.second == 0 or now.second == 1 or now.second == 2):
             account_info = mt5.account_info()
             if account_info is None:
-                ui.update("取得帳戶資訊失敗", 0, 0, currentHolding, "None")
+                ui.update("取得帳戶資訊失敗", 0, 0, position, "None")
                 time.sleep(1)
                 continue
             if account_info.trade_allowed == False:
@@ -146,72 +92,67 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
             # 15 minutes checking
             last_time_update=datetime.now().strftime("%H:%M:%S")
             balance = account_info.balance  
-            currentHolding = get_current_holding()
+            position = get_current_holding()
 
-            if trade_count >= 2:
-                status = "已達日內最大交易數，暫停交易"
-                ui.update(status, balance, currentHolding, datetime.
-                          now().strftime("%H:%M:%S"), last_time_update,trade_count)
-                time.sleep(60)
-                continue
 
             # 取得最新K線資料
-            rates = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_M15, 0, 100)
-            if rates is None or len(rates) < slow + 1:
-                status = "K線資料不足，等待中"
-                ui.update(status, balance, currentHolding, datetime.
-                          now().strftime("%H:%M:%S"), last_time_update,trade_count)
-                time.sleep(1)
-                continue
-
+            rates = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_M15, 0, 30)
             close_prices = [bar['close'] for bar in rates]
             ema_fast = calculate_ema(close_prices, fast)
             ema_slow = calculate_ema(close_prices, slow)
             atr = calculate_atr([{'high': bar['high'], 'low': bar['low'], 'close': bar['close']} for bar in rates], 14)
             
-            # Volatility filter
-            if np.isnan(atr[-1]) or atr[-1] < np.nanmedian(atr[max(0, -100):]):
+            
+            if trade_count >= 1:
+                status = "已達日內最大交易數，暫停交易"
+                ui.update(status, balance, position, now, last_time_update,trade_count)
+                time.sleep(60)
                 continue
 
+            # Volatility filter
+            if np.isnan(atr[-1]) or atr[-1] < np.nanmedian(atr[max(0, len(atr)-250):]):
+                status = "波動率過低，等待確認"
+                ui.update(status, balance, position, now, last_time_update,trade_count)
+                continue
+
+            if ema_fast[-2] < ema_slow[-2] and ema_fast[-1] > ema_slow[-1]:
+                signal = 1  # 多
+            elif ema_fast[-2] > ema_slow[-2] and ema_fast[-1] < ema_slow[-1]:
+                signal = -1 # 空
+
             # 訊號偵測
-            if ema_fast[-2] < ema_slow[-2] and ema_fast[-1] > ema_slow[-1] and currentHolding == "None":
+            if signal == 1 and position == "None":
                 # BUY 訊號
                 entry_price = close_prices[-1]
                 sl = entry_price - atr_mult_sl * atr[-1]
                 tp = entry_price + atr_mult_tp * atr[-1]
                 sl_distance = abs(entry_price - sl)
-                risk_per_trade = min(balance * percentage_of_risk, daily_max_loss)
-                lot_size = risk_per_trade / (sl_distance * contract_size) if sl_distance > 0 else 0.01
-                lot_size = max(0.01, round(lot_size, 2)) 
-                status = f"下單 BUY: lot={lot_size:.2f}, sl={sl:.2f}, tp={tp:.2f}"
-                signal = "BUY"
-                place_trade(symbol, "BUY", lot_size, sl, tp, entry_price, trading_company)
-                currentHolding = "BUY"
+                risk_per_trade = balance * percentage_of_risk
+                lot = round(risk_per_trade / (sl_distance * contract_size), 2)
+                status = f"下單 BUY: lot={lot:.2f}, sl={sl:.2f}, tp={tp:.2f}, 時間={now.strftime('%H:%M:%S')}"
+                place_trade(symbol, "BUY", lot, sl, tp, entry_price, trading_company)
+                position = "BUY"
                 trade_count += 1
-            elif ema_fast[-2] > ema_slow[-2] and ema_fast[-1] < ema_slow[-1] and currentHolding == "None":
+            elif signal == -1 and position == "None":
                 # SELL 訊號
                 entry_price = close_prices[-1]
                 sl = entry_price + atr_mult_sl * atr[-1]
                 tp = entry_price - atr_mult_tp * atr[-1]
                 sl_distance = abs(sl - entry_price)
-                risk_per_trade = min(balance * percentage_of_risk, daily_max_loss)
-                lot_size = risk_per_trade / (sl_distance * contract_size) if sl_distance > 0 else 0.01
-                lot_size = max(0.01, round(lot_size, 2)) 
-                status = f"下單 SELL: lot={lot_size:.2f}, sl={sl:.2f}, tp={tp:.2f}"
-                signal = "SELL"
-                place_trade(symbol, "SELL", lot_size, sl, tp, entry_price, trading_company)
-                currentHolding = "SELL"
+                risk_per_trade = balance * percentage_of_risk
+                lot = round(risk_per_trade / (sl_distance * contract_size), 2)
+                status = f"下單 SELL: lot={lot:.2f}, sl={sl:.2f}, tp={tp:.2f}, 時間={now.strftime('%H:%M:%S')}"
+                place_trade(symbol, "SELL", lot, sl, tp, entry_price, trading_company)
+                position = "SELL"
                 trade_count += 1
-            else:
-                status = "等待交易訊號"
 
-            ui.update(status, balance, currentHolding, datetime.now().strftime("%H:%M:%S"), last_time_update,trade_count)
+            ui.update(status, balance, position, now, last_time_update,trade_count)
 
         time.sleep(1)
 
 def run_account():
-    percentage_of_risk = float(input("設定每單最大虧損:(E.g 0.01 = 1% , 0.1 = 10%...ETC)\n"))
-    trading_company = input("請輸入交易公司:\n")
+    percentage_of_risk = 0.005
+    trading_company = 'OANDA'
     root = tk.Tk()
     ui = TradingBotUI(root)
     t = Thread(target=trading_loop, args=(ui, trading_company, percentage_of_risk), daemon=True)

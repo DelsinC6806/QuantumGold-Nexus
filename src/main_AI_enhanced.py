@@ -18,6 +18,7 @@ warnings.filterwarnings('ignore')
 
 symbol = "XAUUSD"
 fast = 5
+
 slow = 20
 atr_mult_sl = 1.5
 atr_mult_tp = 3.0
