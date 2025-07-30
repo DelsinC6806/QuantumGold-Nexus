@@ -92,7 +92,7 @@ def backtest_dual_ema_atr(
                 tp = entry + atr_mult_tp * atr[-1]
                 sl_distance = abs(entry - sl)
                 risk_per_trade = balance * 0.005
-                lot = risk_per_trade / (sl_distance * contract_size) if sl_distance > 0 else 0.01
+                lot = risk_per_trade / (sl_distance * contract_size)
                 position = {'type': 'BUY', 'entry': entry, 'sl': sl, 'tp': tp, 'lot': lot}
                 today_trade_count += 1
             elif signal == -1:
@@ -100,7 +100,7 @@ def backtest_dual_ema_atr(
                 tp = entry - atr_mult_tp * atr[-1]
                 sl_distance = abs(sl - entry)
                 risk_per_trade = balance * 0.005
-                lot = risk_per_trade / (sl_distance * contract_size) if sl_distance > 0 else 0.01
+                lot = risk_per_trade / (sl_distance * contract_size)
                 position = {'type': 'SELL', 'entry': entry, 'sl': sl, 'tp': tp, 'lot': lot}
                 today_trade_count += 1
 

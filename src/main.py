@@ -77,8 +77,12 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
 
     while True:
 
-        now = datetime.fromtimestamp(mt5.symbol_info_tick(symbol).time)
+        now = datetime.now()
         ui.update(status, balance, position, now, last_time_update,trade_count)
+        if now.hour == 6 and now.minute == 0:
+            # 每天早上6點重置交易次數
+            trade_count = 0
+            ui.update("已重置交易次數", balance, position, now, last_time_update,trade_count)
         if now.minute % 15 == 0 and (now.second == 0 or now.second == 1 or now.second == 2):
             account_info = mt5.account_info()
             if account_info is None:
@@ -102,11 +106,9 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
             ema_slow = calculate_ema(close_prices, slow)
             atr = calculate_atr([{'high': bar['high'], 'low': bar['low'], 'close': bar['close']} for bar in rates], 14)
             
-            
             if trade_count >= 1:
                 status = "已達日內最大交易數，暫停交易"
                 ui.update(status, balance, position, now, last_time_update,trade_count)
-                time.sleep(60)
                 continue
 
             # Volatility filter
@@ -145,6 +147,17 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
                 place_trade(symbol, "SELL", lot, sl, tp, entry_price, trading_company)
                 position = "SELL"
                 trade_count += 1
+
+            if position != "None":
+                status = f"持有 {position} 位置，交易次數: {trade_count}"
+                #收盤前平倉
+                if now.hour == 4 and now.minute == 45:
+                    if position == "BUY":
+                        place_trade(symbol, "SELL", lot, sl, tp, entry_price, trading_company)
+                    elif position == "SELL":
+                        place_trade(symbol, "BUY", lot, sl, tp, entry_price, trading_company)
+                    position = "None"
+                    status += "，已平倉"
 
             ui.update(status, balance, position, now, last_time_update,trade_count)
 
