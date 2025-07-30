@@ -18,9 +18,9 @@ warnings.filterwarnings('ignore')
 
 symbol = "XAUUSD"
 fast = 5
-slow = 15
-atr_mult_sl = 1.0
-atr_mult_tp = 4.0
+slow = 20
+atr_mult_sl = 1.5
+atr_mult_tp = 3.0
 contract_size = 100
 daily_max_loss = 500  # 每日最大虧損設定
 

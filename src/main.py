@@ -11,8 +11,8 @@ from multiprocessing import Process
 symbol = "XAUUSD"
 fast = 5
 slow = 20
-atr_mult_sl = 1.0
-atr_mult_tp = 3.0
+atr_mult_sl = 1.2
+atr_mult_tp = 1.5
 contract_size = 100
 daily_max_loss = 500  # 每日最大虧損設定
 
@@ -67,45 +67,6 @@ def move_sl_to_breakeven(position):
         except Exception as e:
             print(f"移動止損失敗: {e}")
         return False
-
-
-def get_today_pnl(server_info):
-    """
-    使用 MT5 服務器時間計算今日損益
-    """
-    try:
-        if server_info is None:
-            return 0
-            
-        # 使用 UTC 時間
-        utc_now = datetime.now(timezone.utc)
-        utc_today_start = utc_now.replace(hour=0, minute=0, second=0, microsecond=0)
-        
-        # 1. 今日已平倉損益
-        deals = mt5.history_deals_get(utc_today_start, utc_now)
-        realized_pnl = 0
-        if deals:
-            for deal in deals:
-                if deal.symbol == symbol and deal.type in [mt5.DEAL_TYPE_BUY, mt5.DEAL_TYPE_SELL]:
-                    realized_pnl += deal.profit
-
-        # 2. 當前持倉浮動損益
-        positions = mt5.positions_get(symbol=symbol)
-        unrealized_pnl = 0
-        if positions:
-            for pos in positions:
-                # 檢查是否為今日開倉
-                pos_time_utc = datetime.fromtimestamp(pos.time, tz=timezone.utc)
-                if pos_time_utc >= utc_today_start:
-                    unrealized_pnl += pos.profit
-
-        return realized_pnl + unrealized_pnl
-        
-    except Exception as e:
-
-        print(f"計算PnL失敗: {e}")
-        return 0
-        
     
 def get_current_holding():
     """
@@ -186,6 +147,7 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
             last_time_update=datetime.now().strftime("%H:%M:%S")
             balance = account_info.balance  
             currentHolding = get_current_holding()
+
             if trade_count >= 2:
                 status = "已達日內最大交易數，暫停交易"
                 ui.update(status, balance, currentHolding, datetime.
@@ -207,6 +169,10 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
             ema_slow = calculate_ema(close_prices, slow)
             atr = calculate_atr([{'high': bar['high'], 'low': bar['low'], 'close': bar['close']} for bar in rates], 14)
             
+            # Volatility filter
+            if np.isnan(atr[-1]) or atr[-1] < np.nanmedian(atr[max(0, -100):]):
+                continue
+
             # 訊號偵測
             if ema_fast[-2] < ema_slow[-2] and ema_fast[-1] > ema_slow[-1] and currentHolding == "None":
                 # BUY 訊號

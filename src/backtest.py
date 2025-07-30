@@ -1,6 +1,14 @@
 import pandas as pd
 import numpy as np
 
+# 策略參數
+fast = 9
+slow = 21
+atr_period = 14
+atr_mult_sl = 0.5
+atr_mult_tp = 1.0
+contract_size = 100
+
 def calculate_ema(prices, window):
     return pd.Series(prices).ewm(span=window, adjust=False).mean().values
 
@@ -17,198 +25,94 @@ def backtest_dual_ema_atr(
     initial_balance=10000, 
     fast=5, 
     slow=20, 
-    atr_mult_sl=1, 
-    atr_mult_tp=3,
-    contract_size=100,
-    daily_max_loss=500
+    atr_mult_sl=1.2, 
+    atr_mult_tp=1.5,
+    contract_size=100
 ):
-    close_prices = [bar['close'] for bar in data]
-    ema_fast = calculate_ema(close_prices, fast)
-    ema_slow = calculate_ema(close_prices, slow)
-    atr = calculate_atr(data, 14)
     balance = initial_balance
     position = None
-    results = []
-    day_pnl = 0
-    current_day = None
-    day_stop = False
-    day_loss_count = 0
-    daily_max_profit_dynamic = balance * 0.05
-
-    for i in range(max(slow, 15), len(data)):
-        bar_day = pd.to_datetime(data[i]['timestamp']).date()
-        # 新的一天，重置 day_pnl、day_stop、day_loss_count，並動態計算 max profit
-        if current_day != bar_day:
-            day_pnl = 0
-            current_day = bar_day
-            day_stop = False
-            day_loss_count = 0
-            daily_max_profit_dynamic = balance * 0.05  # 動態最大獲利
-
-        # 若已達到當日最大獲利/最大虧損/連續2筆虧損，停止當天交易
-        if day_stop:
-            continue
-        if day_pnl >= daily_max_profit_dynamic or day_pnl <= -daily_max_loss or day_loss_count >= 2:
-            day_stop = True
-            continue
+    trades = []
+    close_prices = [bar['close'] for bar in data]
+    
+    for i in range(max(slow, 14), len(data)):
+        # 只用到第i根的資料計算指標
+        ema_fast = calculate_ema(close_prices[:i+1], fast)
+        ema_slow = calculate_ema(close_prices[:i+1], slow)
+        atr = calculate_atr(data[:i+1], 14)
+        price = close_prices[i]
+        signal = 0
 
         # Volatility filter
         if np.isnan(atr[i]) or atr[i] < np.nanmedian(atr[max(0, i-100):i]):
             continue
 
-        # Entry signals
-        if position is None:
-            # 動態計算每單最大風險（不超過 daily_max_loss，也可自訂比例）
-            if ema_fast[i-1] < ema_slow[i-1] and ema_fast[i] > ema_slow[i]:
-                entry_price = close_prices[i]
-                sl = entry_price - atr_mult_sl * atr[i]
-                tp = entry_price + atr_mult_tp * atr[i]
-                sl_distance = abs(entry_price - sl)
-                risk_per_trade = min(balance * 0.01, daily_max_loss)  # 1% 或 daily_max_loss
-                lot_size = risk_per_trade / (sl_distance * contract_size) if sl_distance > 0 else 0.01
-                position = {'type': 'BUY', 'entry': entry_price, 'sl': sl, 'tp': tp, 'lot': lot_size, 'entry_idx': i}
-            elif ema_fast[i-1] > ema_slow[i-1] and ema_fast[i] < ema_slow[i]:
-                entry_price = close_prices[i]
-                sl = entry_price + atr_mult_sl * atr[i]
-                tp = entry_price - atr_mult_tp * atr[i]
-                sl_distance = abs(sl - entry_price)
-                risk_per_trade = min(balance * 0.01, daily_max_loss)
-                lot_size = risk_per_trade / (sl_distance * contract_size) if sl_distance > 0 else 0.01
-                position = {'type': 'SELL', 'entry': entry_price, 'sl': sl, 'tp': tp, 'lot': lot_size, 'entry_idx': i}
-        else:
+        # 產生訊號
+        if ema_fast[-2] < ema_slow[-2] and ema_fast[-1] > ema_slow[-1]:
+            signal = 1  # 多
+        elif ema_fast[-2] > ema_slow[-2] and ema_fast[-1] < ema_slow[-1]:
+            signal = -1 # 空
+
+        # 平倉邏輯
+        if position is not None:
             high = data[i]['high']
             low = data[i]['low']
             exit_price = None
-            pnl = 0
-            # 檢查浮動獲利是否達到當日最大獲利
             if position['type'] == 'BUY':
-                floating_profit = (high - position['entry']) * position['lot'] * contract_size
-                if floating_profit >= daily_max_profit_dynamic:
-                    exit_price = position['entry'] + daily_max_profit_dynamic / (position['lot'] * contract_size)
-                    day_stop = True
-                elif low <= position['sl']:
+                if low <= position['sl']:
                     exit_price = position['sl']
                 elif high >= position['tp']:
                     exit_price = position['tp']
-                elif ema_fast[i-1] > ema_slow[i-1] and ema_fast[i] < ema_slow[i]:
-                    exit_price = close_prices[i]
-                if exit_price is not None:
-                    pnl = (exit_price - position['entry']) * position['lot'] * contract_size
             elif position['type'] == 'SELL':
-                floating_profit = (position['entry'] - low) * position['lot'] * contract_size
-                if floating_profit >= daily_max_profit_dynamic:
-                    exit_price = position['entry'] - daily_max_profit_dynamic / (position['lot'] * contract_size)
-                    day_stop = True
-                elif high >= position['sl']:
+                if high >= position['sl']:
                     exit_price = position['sl']
                 elif low <= position['tp']:
                     exit_price = position['tp']
-                elif ema_fast[i-1] < ema_slow[i-1] and ema_fast[i] > ema_slow[i]:
-                    exit_price = close_prices[i]
-                if exit_price is not None:
-                    pnl = (position['entry'] - exit_price) * position['lot'] * contract_size
             if exit_price is not None:
+                if position['type'] == 'BUY':
+                    pnl = (exit_price - position['entry']) * contract_size * position['lot']
+                else:
+                    pnl = (position['entry'] - exit_price) * contract_size * position['lot']
                 balance += pnl
-                day_pnl += pnl
-                if pnl < 0:
-                    day_loss_count += 1
-                if pnl >= daily_max_profit_dynamic:
-                    day_stop = True
-                results.append({
-                    'entry_time': data[position['entry_idx']]['timestamp'],
-                    'exit_time': data[i]['timestamp'],
-                    'type': position['type'],
-                    'entry': position['entry'],
-                    'exit': exit_price,
-                    'lot': position['lot'],
-                    'pnl': pnl,
-                    'balance': balance,
-                    'day_pnl': day_pnl,
-                    'day_loss_count': day_loss_count
-                })
+                trades.append({'type': position['type'], 'entry': position['entry'], 'exit': f"{exit_price:.2f}", 'pnl': f"{pnl:.2f}", 'lot': position['lot']})
                 position = None
-    df = pd.DataFrame(results)
-    df.to_csv("backtest_trades.csv", index=False)
-    
-    # 計算勝率統計
-    total_trades = len(df)
-    winning_trades = len(df[df['pnl'] > 0])
-    losing_trades = len(df[df['pnl'] < 0])
-    win_rate = (winning_trades / total_trades * 100) if total_trades > 0 else 0
-    
-    # 計算平均獲利/虧損
-    avg_win = df[df['pnl'] > 0]['pnl'].mean() if winning_trades > 0 else 0
-    avg_loss = df[df['pnl'] < 0]['pnl'].mean() if losing_trades > 0 else 0
-    
-    # 計算獲利因子
-    total_profit = df[df['pnl'] > 0]['pnl'].sum()
-    total_loss = abs(df[df['pnl'] < 0]['pnl'].sum())
-    profit_factor = (total_profit / total_loss) if total_loss > 0 else float('inf')
-    
-    # 計算連續虧損和連續獲利
-    def calculate_consecutive_streaks(pnl_series):
-        if len(pnl_series) == 0:
-            return 0, 0, 0, 0
-            
-        wins = (pnl_series > 0).astype(int)
-        losses = (pnl_series < 0).astype(int)
-        
-        # 計算連續獲利
-        win_streaks = []
-        current_win_streak = 0
-        for win in wins:
-            if win == 1:
-                current_win_streak += 1
-            else:
-                if current_win_streak > 0:
-                    win_streaks.append(current_win_streak)
-                current_win_streak = 0
-        if current_win_streak > 0:
-            win_streaks.append(current_win_streak)
-            
-        # 計算連續虧損
-        loss_streaks = []
-        current_loss_streak = 0
-        for loss in losses:
-            if loss == 1:
-                current_loss_streak += 1
-            else:
-                if current_loss_streak > 0:
-                    loss_streaks.append(current_loss_streak)
-                current_loss_streak = 0
-        if current_loss_streak > 0:
-            loss_streaks.append(current_loss_streak)
-            
-        max_consecutive_wins = max(win_streaks) if win_streaks else 0
-        max_consecutive_losses = max(loss_streaks) if loss_streaks else 0
-        avg_consecutive_wins = sum(win_streaks) / len(win_streaks) if win_streaks else 0
-        avg_consecutive_losses = sum(loss_streaks) / len(loss_streaks) if loss_streaks else 0
-        
-        return max_consecutive_wins, max_consecutive_losses, avg_consecutive_wins, avg_consecutive_losses
-    
-    max_consec_wins, max_consec_losses, avg_consec_wins, avg_consec_losses = calculate_consecutive_streaks(df['pnl'])
-    
-    print(df)
-    print("\n=== 回測結果統計 ===")
-    print(f"Final balance: {balance:.2f}")
-    print(f"Return: {((balance-initial_balance)/initial_balance)*100:.2f}%")
-    print(f"Total trades: {total_trades}")
-    print(f"Winning trades: {winning_trades}")
-    print(f"Losing trades: {losing_trades}")
-    print(f"Win rate: {win_rate:.2f}%")
-    print(f"Average win: {avg_win:.2f}")
-    print(f"Average loss: {avg_loss:.2f}")
-    print(f"Profit factor: {profit_factor:.2f}")
-    print(f"\n=== 連續交易統計 ===")
-    print(f"Max consecutive wins: {max_consec_wins}")
-    print(f"Max consecutive losses: {max_consec_losses}")
-    print(f"Average consecutive wins: {avg_consec_wins:.2f}")
-    print(f"Average consecutive losses: {avg_consec_losses:.2f}")
-    return df
+
+        # 開倉邏輯（只允許單一持倉）
+        if position is None and signal != 0 and not np.isnan(atr[-1]):
+            entry = price
+            if signal == 1:
+                sl = entry - atr_mult_sl * atr[-1]
+                tp = entry + atr_mult_tp * atr[-1]
+                sl_distance = abs(entry - sl)
+                risk_per_trade = balance * 0.01
+                lot = risk_per_trade / (sl_distance * contract_size) if sl_distance > 0 else 0.01
+                position = {'type': 'BUY', 'entry': entry, 'sl': sl, 'tp': tp, 'lot': lot}
+            elif signal == -1:
+                sl = entry + atr_mult_sl * atr[-1]
+                tp = entry - atr_mult_tp * atr[-1]
+                sl_distance = abs(sl - entry)
+                risk_per_trade = balance * 0.01
+                lot = risk_per_trade / (sl_distance * contract_size) if sl_distance > 0 else 0.01
+                position = {'type': 'SELL', 'entry': entry, 'sl': sl, 'tp': tp, 'lot': lot}
+
+
+    win_trades = 0
+    lose_trades = 0
+    for t in trades:
+        print(t)
+        if float(t['pnl']) > 0:
+            win_trades += 1
+        elif float(t['pnl']) < 0:
+            lose_trades += 1
+    print(f"總交易次數: {len(trades)}")
+    print(f"最終資金: {balance:.2f}")
+    print(f"獲利交易次數: {win_trades}")
+    print(f"虧損交易次數: {lose_trades}")
+    print(f"獲勝率: {win_trades / len(trades) * 100:.2f}%")
+    print(f"獲利率: {(balance - initial_balance) / initial_balance * 100:.2f}%")
 
 if __name__ == "__main__":
     data = pd.read_csv("history_data.csv")
     data = data.to_dict('records')
     backtest_dual_ema_atr(
-        data
+        data,
     )
