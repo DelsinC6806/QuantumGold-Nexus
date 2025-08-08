@@ -8,7 +8,7 @@ import tkinter as tk
 from threading import Thread
 from multiprocessing import Process
 
-symbol = "XAUUSD"
+symbol = "XAUUSD.x"
 fast = 5
 slow = 20
 atr_mult_sl = 1.0
@@ -83,7 +83,9 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
             # 每天早上6點重置交易次數
             trade_count = 0
             ui.update("已重置交易次數", balance, position, now, last_time_update,trade_count)
+
         if now.minute % 15 == 0 and (now.second == 0 or now.second == 1 or now.second == 2):
+            signal = 0
             account_info = mt5.account_info()
             if account_info is None:
                 ui.update("取得帳戶資訊失敗", 0, 0, position, "None")
@@ -101,7 +103,13 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
 
             # 取得最新K線資料
             rates = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_M15, 0, 30)
+            if rates is None or len(rates) < 30:
+                status = "無法獲取K線資料，請檢查網絡連接或交易品種"
+                ui.update(status, balance, position, now, last_time_update,trade_count)
+                time.sleep(1)
+                continue
             close_prices = [bar['close'] for bar in rates]
+            
             ema_fast = calculate_ema(close_prices, fast)
             ema_slow = calculate_ema(close_prices, slow)
             atr = calculate_atr([{'high': bar['high'], 'low': bar['low'], 'close': bar['close']} for bar in rates], 14)
@@ -116,11 +124,13 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
                 status = "波動率過低，等待確認"
                 ui.update(status, balance, position, now, last_time_update,trade_count)
                 continue
-
+                    
             if ema_fast[-2] < ema_slow[-2] and ema_fast[-1] > ema_slow[-1]:
                 signal = 1  # 多
             elif ema_fast[-2] > ema_slow[-2] and ema_fast[-1] < ema_slow[-1]:
                 signal = -1 # 空
+            else:
+                signal = 0
 
             # 訊號偵測
             if signal == 1 and position == "None":
