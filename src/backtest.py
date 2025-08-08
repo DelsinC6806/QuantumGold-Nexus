@@ -40,8 +40,7 @@ def backtest_dual_ema_atr(
         price = close_prices[i]
         signal = 0
 
-        # Volatility filter
-        if np.isnan(atr[i]) or atr[i] < np.nanmedian(atr[max(0, i-250):i]):
+        if np.isnan(atr[-1]) or atr[-1] < np.nanmedian(atr[max(0, i-250):i]):
             continue
 
         if today_trade_count >= 1:
