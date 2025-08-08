@@ -16,7 +16,7 @@ def calculate_atr(data, window=14):
 
 def backtest_dual_ema_atr(
     data, 
-    initial_balance=10000, 
+    initial_balance=25000, 
     fast=5, 
     slow=20, 
     atr_mult_sl=1.0, 

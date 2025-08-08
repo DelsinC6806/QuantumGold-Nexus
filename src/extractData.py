@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime
 symbol = "XAUUSD"
 timeframe = mt5.TIMEFRAME_M15  # 15-minute candles
-bars = 1920*3  # Number of candles to extract
+bars = 1920*50  # Number of candles to extract
 
 # Initialize MT5
 if not mt5.initialize():

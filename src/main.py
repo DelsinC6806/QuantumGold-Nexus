@@ -151,7 +151,7 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
             if position != "None":
                 status = f"持有 {position} 位置，交易次數: {trade_count}"
                 #收盤前平倉
-                if now.hour == 4 and now.minute == 45:
+                if now.hour == 4 and now.minute == 30:
                     if position == "BUY":
                         place_trade(symbol, "SELL", lot, sl, tp, entry_price, trading_company)
                     elif position == "SELL":
