@@ -90,7 +90,7 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
     status = ""
     balance = account_info.balance if account_info else 0
     print(datetime.today().replace(hour=6, minute=0, second=0))
-    trade_count = len(mt5.history_orders_get(datetime.today().replace(hour=6, minute=0, second=0), datetime.now(), symbol=symbol)/2)
+    trade_count = len(mt5.history_orders_get(datetime.today().replace(hour=6, minute=0, second=0), datetime.now(), symbol=symbol))
     position = get_current_holding()
     last_time_update = datetime.now().strftime("%H:%M:%S")
     signal = 0
