@@ -8,13 +8,27 @@ import tkinter as tk
 from threading import Thread
 from multiprocessing import Process
 import math
+import os
 
-symbol = "XAUUSD"
+symbol = "XAUUSD.r"
 fast = 5
 slow = 20
 atr_mult_sl = 1.0
 atr_mult_tp = 3.5
 contract_size = 100
+
+def count_trades_today_simple(log_path: str, target_date: str) -> int:
+    """
+    只要 trade_log.txt 裡有幾行包含今天日期（格式: YYYY-MM-DD）
+    """
+    if not os.path.isfile(log_path):
+        return 0
+    count = 0
+    with open(log_path, 'r', encoding='utf-8') as f:
+        for line in f:
+            if target_date in line:
+                count += 1
+    return count
 
 def get_current_holding():
     """
@@ -29,6 +43,7 @@ def get_current_holding():
             return "SELL"
 
     return "None"
+
 
 class TradingBotUI:
     def __init__(self, root):
@@ -89,9 +104,13 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
     account_info = mt5.account_info()
     status = ""
     balance = account_info.balance if account_info else 0
-    print(datetime.today().replace(hour=6, minute=0, second=0))
-    trade_count = len(mt5.history_orders_get(datetime.today().replace(hour=6, minute=0, second=0), datetime.now(), symbol=symbol))
     position = get_current_holding()
+    if datetime.now().hour >= 0 and datetime.now().hour < 6 :
+        today = datetime.now() - timedelta(days=1)
+    else:
+        today = datetime.now()
+    today = today.strftime("%Y-%m-%d")
+    trade_count = count_trades_today_simple("trade_log.txt", today)
     last_time_update = datetime.now().strftime("%H:%M:%S")
     signal = 0
     last_bar_time = None  # 新K棒保護
@@ -145,8 +164,7 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
             # 新K棒保護：同一根K棒只處理一次
             latest_bar_ts = int(rates[-1]['time'])
             if last_bar_time == latest_bar_ts:
-                status = "等待新K棒"
-                ui.update(status, balance, position, now, last_time_update, trade_count)
+                print(f"已處理過最新K棒，跳過 {latest_bar_ts}")
                 time.sleep(1)
                 continue
             last_bar_time = latest_bar_ts
@@ -157,8 +175,7 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
             atr = calculate_atr([{'high': bar['high'], 'low': bar['low'], 'close': bar['close']} for bar in rates], 14)
 
             if trade_count >= 1:
-                status = "已達日內最大交易數，暫停交易"
-                ui.update(status, balance, position, now, last_time_update,trade_count)
+                print("已達日內最大交易數，暫停交易")
                 continue
 
             # Volatility filter（使用近250根的中位數）
@@ -167,7 +184,11 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
                 print(f"[{now:%Y-%m-%d %H:%M:%S}] ATR14<{atr[-1]:.2f}>  ATR250-med<{np.nanmedian(atr[-250:]):.2f}>")
                 ui.update(status, balance, position, now, last_time_update, trade_count)
                 continue
-                
+            else:
+                status = "波動率正常，準備下單"
+                print(f"[{now:%Y-%m-%d %H:%M:%S}] ATR14<{atr[-1]:.2f}>  ATR250-med<{np.nanmedian(atr[-250:]):.2f}>")
+                ui.update(status, balance, position, now, last_time_update, trade_count)
+
             if ema_fast[-2] < ema_slow[-2] and ema_fast[-1] > ema_slow[-1]:
                 signal = 1  # 多
             elif ema_fast[-2] > ema_slow[-2] and ema_fast[-1] < ema_slow[-1]:

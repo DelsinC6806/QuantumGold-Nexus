@@ -16,11 +16,11 @@ def calculate_atr(data, window=14):
 
 def backtest_dual_ema_atr(
     data, 
-    initial_balance=25000, 
+    initial_balance=100000, 
     fast=5, 
     slow=20, 
     atr_mult_sl=1.0, 
-    atr_mult_tp=3.5,
+    atr_mult_tp=1.5,
     contract_size=100
 ):
     balance = initial_balance
