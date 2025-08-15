@@ -14,8 +14,35 @@ symbol = "XAUUSD.r"
 fast = 5
 slow = 20
 atr_mult_sl = 1.0
-atr_mult_tp = 3.5
+atr_mult_tp = 4.0
 contract_size = 100
+
+
+def move_sl_to_breakeven(symbol):
+    positions = mt5.positions_get(symbol=symbol)
+    if not positions:
+        return
+    for pos in positions:
+        entry = pos.price_open
+        ticket = pos.ticket
+        if pos.type == mt5.POSITION_TYPE_BUY:
+            new_sl = entry  # 多單 SL 移到進場價
+        elif pos.type == mt5.POSITION_TYPE_SELL:
+            new_sl = entry  # 空單 SL 也移到進場價
+        else:
+            continue
+
+        # 只在 SL 尚未移動時才執行
+        if pos.sl != new_sl:
+            request = {
+                "action": mt5.TRADE_ACTION_SLTP,
+                "position": ticket,
+                "sl": new_sl,
+                "tp": pos.tp,
+                "symbol": symbol,
+            }
+            result = mt5.order_send(request)
+            print(f"移動 SL 結果: {result}")
 
 def count_trades_today_simple(log_path: str, target_date: str) -> int:
     """
@@ -115,6 +142,7 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
     signal = 0
     last_bar_time = None  # 新K棒保護
     sym_info = mt5.symbol_info(symbol)
+    entry_price = 0
     vol_step = sym_info.volume_step if sym_info else 0.01
     ui.update(status, balance, position, datetime.now().strftime("%H:%M:%S"), last_time_update,trade_count)
 
@@ -136,6 +164,7 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
             ui.update(status, balance, position, now, last_time_update, trade_count)
             time.sleep(60)
             continue
+
 
         if now.minute % 15 == 0 and (now.second in (0, 1, 2)):
             signal = 0
@@ -172,7 +201,19 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
             close_prices = [bar['close'] for bar in rates]
             ema_fast = calculate_ema(close_prices, fast)
             ema_slow = calculate_ema(close_prices, slow)
+            ema_200 = calculate_ema(close_prices, 200)
             atr = calculate_atr([{'high': bar['high'], 'low': bar['low'], 'close': bar['close']} for bar in rates], 14)
+
+            if position != "None":
+                if position == "BUY":
+                    one_r = abs(entry_price - position['sl'])
+                    if(close_prices[-1] > entry_price + one_r):
+                        move_sl_to_breakeven(symbol)
+                else:
+                    one_r = abs(position['sl'] - entry_price)
+                    if(close_prices[-1] < entry_price - one_r):
+                        move_sl_to_breakeven(symbol)
+                continue
 
             if trade_count >= 1:
                 print("已達日內最大交易數，暫停交易")
@@ -189,9 +230,9 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
                 print(f"[{now:%Y-%m-%d %H:%M:%S}] ATR14<{atr[-1]:.2f}>  ATR250-med<{np.nanmedian(atr[-250:]):.2f}>")
                 ui.update(status, balance, position, now, last_time_update, trade_count)
 
-            if ema_fast[-2] < ema_slow[-2] and ema_fast[-1] > ema_slow[-1]:
+            if ema_fast[-2] < ema_slow[-2] and ema_fast[-1] > ema_slow[-1] and close_prices[-1] > ema_200[-1]:
                 signal = 1  # 多
-            elif ema_fast[-2] > ema_slow[-2] and ema_fast[-1] < ema_slow[-1]:
+            elif ema_fast[-2] > ema_slow[-2] and ema_fast[-1] < ema_slow[-1] and close_prices[-1] < ema_200[-1]:
                 signal = -1 # 空
             else:
                 signal = 0

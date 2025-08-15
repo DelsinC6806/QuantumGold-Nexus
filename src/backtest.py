@@ -20,7 +20,7 @@ def backtest_dual_ema_atr(
     fast=5, 
     slow=20, 
     atr_mult_sl=1.0, 
-    atr_mult_tp=1.5,
+    atr_mult_tp=4.0,
     contract_size=100
 ):
     balance = initial_balance
@@ -36,6 +36,7 @@ def backtest_dual_ema_atr(
            today_trade_count = 0
         ema_fast = calculate_ema(close_prices[:i+1], fast)
         ema_slow = calculate_ema(close_prices[:i+1], slow)
+        ema_200 = calculate_ema(close_prices[:i+1], 200)
         atr = calculate_atr(data[:i+1], 14)
         price = close_prices[i]
         signal = 0
@@ -47,9 +48,10 @@ def backtest_dual_ema_atr(
             continue
 
         # 產生訊號
-        if ema_fast[-2] < ema_slow[-2] and ema_fast[-1] > ema_slow[-1]:
+
+        if ema_fast[-2] < ema_slow[-2] and ema_fast[-1] > ema_slow[-1] and price > ema_200[-1]:
             signal = 1  # 多
-        elif ema_fast[-2] > ema_slow[-2] and ema_fast[-1] < ema_slow[-1]:
+        elif ema_fast[-2] > ema_slow[-2] and ema_fast[-1] < ema_slow[-1] and price < ema_200[-1]:
             signal = -1 # 空
 
         # 平倉邏輯
@@ -58,6 +60,21 @@ def backtest_dual_ema_atr(
             high = data[i]['high']
             low = data[i]['low']
             exit_price = None
+
+            # ====== 移動停損到進場價 ======
+            if move_sl_to_be:
+                # 多單：若最高價 >= entry + 1R，則 SL 移到 entry
+                if position['type'] == 'BUY':
+                    two_r = abs(entry - position['sl'] )
+                    if high >= entry + two_r and position['sl'] < entry:
+                        position['sl'] = entry
+                # 空單：若最低價 <= entry - 1R，則 SL 移到 entry
+                elif position['type'] == 'SELL':
+                    two_r = abs(position['sl'] - entry)
+                    if low <= entry - two_r and position['sl'] > entry:
+                        position['sl'] = entry
+            # ===========================
+
             if position['type'] == 'BUY':
                 if('23:45:00' in data[i]['timestamp']): #
                     exit_price = price

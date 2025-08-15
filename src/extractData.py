@@ -7,7 +7,7 @@ symbol = "XAUUSD.r"
 timeframe = mt5.TIMEFRAME_M15
 
 # 需求設定
-bars = 1920*6         # 目標輸出根數
+bars = 1920*12         # 目標輸出根數
 search_total = 50000   # 先抓這麼多最近K棒（需 >= bars）
 use_random_start = True
 seed = None  # 可填整數以固定隨機結果，例如 42
