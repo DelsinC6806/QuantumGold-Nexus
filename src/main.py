@@ -198,21 +198,28 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
                 continue
             last_bar_time = latest_bar_ts
 
+            # 計算指標(ema 5, 20 , 200, atr)
             close_prices = [bar['close'] for bar in rates]
             ema_fast = calculate_ema(close_prices, fast)
             ema_slow = calculate_ema(close_prices, slow)
             ema_200 = calculate_ema(close_prices, 200)
             atr = calculate_atr([{'high': bar['high'], 'low': bar['low'], 'close': bar['close']} for bar in rates], 14)
 
+            # 移動止損到保本
             if position != "None":
-                if position == "BUY":
-                    one_r = abs(entry_price - position['sl'])
-                    if(close_prices[-1] > entry_price + one_r):
-                        move_sl_to_breakeven(symbol)
-                else:
-                    one_r = abs(position['sl'] - entry_price)
-                    if(close_prices[-1] < entry_price - one_r):
-                        move_sl_to_breakeven(symbol)
+                positions = mt5.positions_get(symbol=symbol)
+                if positions:
+                    pos = positions[0]
+                    entry = pos.price_open
+                    sl = pos.sl
+                    if pos.type == mt5.POSITION_TYPE_BUY:
+                        one_r = abs(entry - sl)
+                        if close_prices[-1] > entry + one_r and sl < entry:
+                            move_sl_to_breakeven(symbol)
+                    elif pos.type == mt5.POSITION_TYPE_SELL:
+                        one_r = abs(sl - entry)
+                        if close_prices[-1] < entry - one_r and sl > entry:
+                            move_sl_to_breakeven(symbol)
                 continue
 
             if trade_count >= 1:
