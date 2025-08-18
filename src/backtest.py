@@ -20,7 +20,7 @@ def backtest_dual_ema_atr(
     fast=5, 
     slow=20, 
     atr_mult_sl=1.0, 
-    atr_mult_tp=4.0,
+    atr_mult_tp=3.0,
     contract_size=100
 ):
     balance = initial_balance

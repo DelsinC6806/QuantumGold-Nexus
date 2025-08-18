@@ -14,35 +14,8 @@ symbol = "XAUUSD.r"
 fast = 5
 slow = 20
 atr_mult_sl = 1.0
-atr_mult_tp = 4.0
+atr_mult_tp = 3.0
 contract_size = 100
-
-
-def move_sl_to_breakeven(symbol):
-    positions = mt5.positions_get(symbol=symbol)
-    if not positions:
-        return
-    for pos in positions:
-        entry = pos.price_open
-        ticket = pos.ticket
-        if pos.type == mt5.POSITION_TYPE_BUY:
-            new_sl = entry  # 多單 SL 移到進場價
-        elif pos.type == mt5.POSITION_TYPE_SELL:
-            new_sl = entry  # 空單 SL 也移到進場價
-        else:
-            continue
-
-        # 只在 SL 尚未移動時才執行
-        if pos.sl != new_sl:
-            request = {
-                "action": mt5.TRADE_ACTION_SLTP,
-                "position": ticket,
-                "sl": new_sl,
-                "tp": pos.tp,
-                "symbol": symbol,
-            }
-            result = mt5.order_send(request)
-            print(f"移動 SL 結果: {result}")
 
 def count_trades_today_simple(log_path: str, target_date: str) -> int:
     """
@@ -204,23 +177,6 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
             ema_slow = calculate_ema(close_prices, slow)
             ema_200 = calculate_ema(close_prices, 200)
             atr = calculate_atr([{'high': bar['high'], 'low': bar['low'], 'close': bar['close']} for bar in rates], 14)
-
-            # 移動止損到保本
-            if position != "None":
-                positions = mt5.positions_get(symbol=symbol)
-                if positions:
-                    pos = positions[0]
-                    entry = pos.price_open
-                    sl = pos.sl
-                    if pos.type == mt5.POSITION_TYPE_BUY:
-                        one_r = abs(entry - sl)
-                        if close_prices[-1] > entry + one_r and sl < entry:
-                            move_sl_to_breakeven(symbol)
-                    elif pos.type == mt5.POSITION_TYPE_SELL:
-                        one_r = abs(sl - entry)
-                        if close_prices[-1] < entry - one_r and sl > entry:
-                            move_sl_to_breakeven(symbol)
-                continue
 
             if trade_count >= 1:
                 print("已達日內最大交易數，暫停交易")
