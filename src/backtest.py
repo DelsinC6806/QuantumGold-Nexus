@@ -49,9 +49,9 @@ def backtest_dual_ema_atr(
 
         # 產生訊號
 
-        if ema_fast[-2] < ema_slow[-2] and ema_fast[-1] > ema_slow[-1] and price > ema_200[-1]:
+        if ema_fast[-2] < ema_slow[-2] and ema_fast[-1] > ema_slow[-1] and price < ema_200[-1]:
             signal = 1  # 多
-        elif ema_fast[-2] > ema_slow[-2] and ema_fast[-1] < ema_slow[-1] and price < ema_200[-1]:
+        elif ema_fast[-2] > ema_slow[-2] and ema_fast[-1] < ema_slow[-1] and price > ema_200[-1]:
             signal = -1 # 空
 
         # 平倉邏輯

@@ -177,7 +177,7 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
             ema_slow = calculate_ema(close_prices, slow)
             ema_200 = calculate_ema(close_prices, 200)
             atr = calculate_atr([{'high': bar['high'], 'low': bar['low'], 'close': bar['close']} for bar in rates], 14)
-
+            print("["+datetime.now().strftime("%Y-%m-%d %H:%M:%S")+"]EMA 5:" + str(ema_fast[-1]) + ",EMA 20:" + str(ema_slow[-1]) + ",EMA 200:" + str(ema_200[-1]))
             if trade_count >= 1:
                 print("已達日內最大交易數，暫停交易")
                 continue
@@ -193,9 +193,9 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
                 print(f"[{now:%Y-%m-%d %H:%M:%S}] ATR14<{atr[-1]:.2f}>  ATR250-med<{np.nanmedian(atr[-250:]):.2f}>")
                 ui.update(status, balance, position, now, last_time_update, trade_count)
 
-            if ema_fast[-2] < ema_slow[-2] and ema_fast[-1] > ema_slow[-1] and close_prices[-1] > ema_200[-1]:
+            if ema_fast[-2] < ema_slow[-2] and ema_fast[-1] > ema_slow[-1] :#and close_prices[-1] > ema_200[-1]:
                 signal = 1  # 多
-            elif ema_fast[-2] > ema_slow[-2] and ema_fast[-1] < ema_slow[-1] and close_prices[-1] < ema_200[-1]:
+            elif ema_fast[-2] > ema_slow[-2] and ema_fast[-1] < ema_slow[-1] :#and close_prices[-1] < ema_200[-1]:
                 signal = -1 # 空
             else:
                 signal = 0
