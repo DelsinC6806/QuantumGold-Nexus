@@ -25,3 +25,12 @@ Stop-Loss: 3340.4421428571427
 Take-Profit: 3357.1725
 Timestamp: 2025-08-15 17:30:01
 ----------------------------------------
+Trade Executed:
+Symbol: XAUUSD.r
+Action: BUY
+Lot Size: 1.33
+Executed Price: 3341.89
+Stop-Loss: 3337.905714285714
+Take-Profit: 3352.922857142857
+Timestamp: 2025-08-21 20:15:01
+----------------------------------------

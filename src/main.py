@@ -4,7 +4,6 @@ import time
 import numpy as np
 from strategy import calculate_ema, calculate_atr
 from placetrade import place_trade
-import tkinter as tk
 from threading import Thread
 from multiprocessing import Process
 import math
@@ -45,39 +44,6 @@ def get_current_holding():
     return "None"
 
 
-class TradingBotUI:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("StrategyBasedBOT 狀態面板")
-        self.status_text = tk.StringVar()
-        self.holding_text = tk.StringVar()
-        self.balance_text = tk.StringVar()
-        self.time_now_text = tk.StringVar()
-        self.last_time_update_text = tk.StringVar()
-        self.trade_count_text = tk.StringVar()
-
-        self.status_label = tk.Label(root, textvariable=self.status_text, font=("Arial", 12), fg="blue")
-        self.status_label.pack(pady=5)
-        self.balance_label = tk.Label(root, textvariable=self.balance_text, font=("Arial", 12))
-        self.balance_label.pack(pady=5)
-        self.holding_label = tk.Label(root, textvariable=self.holding_text, font=("Arial", 12))
-        self.holding_label.pack(pady=5)
-        self.time_now_label = tk.Label(root, textvariable=self.time_now_text, font=("Arial", 12))
-        self.time_now_label.pack(pady=5)
-        self.last_time_update_label = tk.Label(root, textvariable=self.last_time_update_text, font=("Arial", 12))
-        self.last_time_update_label.pack(pady=5)
-        self.trade_count_label = tk.Label(root, textvariable=self.trade_count_text, font=("Arial", 12))
-        self.trade_count_label.pack(pady=5)
-        self.status_text.set("初始化中...")
-
-    def update(self, status, balance, holding,time_now, last_time_update,trade_count=0):
-        self.status_text.set(status)
-        self.balance_text.set(f"帳戶餘額: {balance:.2f}")
-        self.holding_text.set(f"當前持倉: {holding}")
-        self.time_now_text.set(f"香港時間: {time_now}")
-        self.last_time_update_text.set(f"最後更新時間: {last_time_update}")
-        self.trade_count_text.set(f"交易次數: {trade_count}")
-
 def round_to_step(volume, step):
     """依 symbol 的 volume_step 修正手數（向下取整避免被拒單）"""
     if step <= 0:
@@ -97,12 +63,11 @@ def close_all_positions(symbol, trading_company):
         elif pos.type == mt5.POSITION_TYPE_SELL:
             place_trade(symbol, "BUY", vol, 0, 0, tick.ask, trading_company)
 
-def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01): 
-    if not mt5.initialize():
-        ui.update("MetaTrader 5 初始化失敗", 0, 0, "None", "None")
-        return
+def trading_loop(mt5_path, login, password, server, symbol, trading_company, percentage_of_risk=0.01):
+    if not mt5.initialize(path=mt5_path, login=login, password=password, server=server):
+            print(f"initialize() failed for {symbol} {login}")
+            return
     account_info = mt5.account_info()
-    status = ""
     balance = account_info.balance if account_info else 0
     position = get_current_holding()
     if datetime.now().hour >= 0 and datetime.now().hour < 6 :
@@ -111,30 +76,24 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
         today = datetime.now()
     today = today.strftime("%Y-%m-%d")
     trade_count = count_trades_today_simple("trade_log.txt", today)
-    last_time_update = datetime.now().strftime("%H:%M:%S")
     signal = 0
     last_bar_time = None  # 新K棒保護
     sym_info = mt5.symbol_info(symbol)
     entry_price = 0
     vol_step = sym_info.volume_step if sym_info else 0.01
-    ui.update(status, balance, position, datetime.now().strftime("%H:%M:%S"), last_time_update,trade_count)
 
     while True:
 
         now = datetime.now()
-        ui.update(status, balance, position, now, last_time_update, trade_count)
 
         # 每天早上6點重置交易次數（香港時間）
         if now.hour == 6 and now.minute == 0:
             trade_count = 0
-            ui.update("已重置交易次數", balance, position, now, last_time_update,trade_count)
 
         # 收盤前強制平倉：香港時間 04:45
         if now.hour == 4 and now.minute == 45 and position != "None":
             close_all_positions(symbol, trading_company)
             position = "None"
-            status = "香港時間 04:45 強制平倉"
-            ui.update(status, balance, position, now, last_time_update, trade_count)
             time.sleep(60)
             continue
 
@@ -143,11 +102,12 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
             signal = 0
             account_info = mt5.account_info()
             if account_info is None:
-                ui.update("取得帳戶資訊失敗", 0, 0, position, "None")
+                print("取得帳戶資訊失敗")
                 time.sleep(1)
                 continue
             if account_info.trade_allowed == False:
-                ui.update("交易未啟用", 0, 0, "None", "None")
+                print("交易未啟用")
+                time.sleep(1)
                 continue
 
             # 15 minutes checking
@@ -158,8 +118,6 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
             # 取得更多K線資料（用於ATR過濾至少250根）
             rates = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_M15, 0, 300)
             if rates is None or len(rates) < 30:
-                status = "無法獲取K線資料，請檢查網絡連接或交易品種"
-                ui.update(status, balance, position, now, last_time_update,trade_count)
                 time.sleep(1)
                 continue
 
@@ -184,14 +142,11 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
 
             # Volatility filter（使用近250根的中位數）
             if np.isnan(atr[-1]) or atr[-1] < np.nanmedian(atr[-250:]):
-                status = "波動率過低，等待確認"
                 print(f"[{now:%Y-%m-%d %H:%M:%S}] ATR14<{atr[-1]:.2f}>  ATR250-med<{np.nanmedian(atr[-250:]):.2f}>")
-                ui.update(status, balance, position, now, last_time_update, trade_count)
                 continue
             else:
                 status = "波動率正常，準備下單"
                 print(f"[{now:%Y-%m-%d %H:%M:%S}] ATR14<{atr[-1]:.2f}>  ATR250-med<{np.nanmedian(atr[-250:]):.2f}>")
-                ui.update(status, balance, position, now, last_time_update, trade_count)
 
             if ema_fast[-2] < ema_slow[-2] and ema_fast[-1] > ema_slow[-1] :#and close_prices[-1] > ema_200[-1]:
                 signal = 1  # 多
@@ -226,19 +181,53 @@ def trading_loop(ui: TradingBotUI, trading_company, percentage_of_risk=0.01):
                 place_trade(symbol, "SELL", lot, sl, tp, entry_price, trading_company)
                 position = "SELL"
                 trade_count += 1
-
-            ui.update(status, balance, position, now, last_time_update, trade_count)
-
         time.sleep(1)
 
-def run_account():
-    percentage_of_risk = 0.005
-    trading_company = 'OANDA'
-    root = tk.Tk()
-    ui = TradingBotUI(root)
-    t = Thread(target=trading_loop, args=(ui, trading_company, percentage_of_risk), daemon=True)
-    t.start()
-    root.mainloop()
+def run_multi_bots(instances):
+    """
+    instances: list of dict, 每個 dict 包含 mt5_path, login, password, server, symbol, trading_company
+    """
+    procs = []
+    for inst in instances:
+        p = Process(
+            target=trading_loop,
+            args=(
+                inst['mt5_path'],
+                inst['login'],
+                inst['password'],
+                inst['server'],
+                inst['symbol'],
+                inst['trading_company'],
+                inst.get('percentage_of_risk', 0.01)
+            ),
+            daemon=True
+        )
+        p.start()
+        procs.append(p)
+    for p in procs:
+        p.join()
+
 
 if __name__ == "__main__":
-    run_account()
+    instances = [
+        {
+            'mt5_path': "C:\Program Files\mt5\terminal64.exe",
+            'login': 'your_login',
+            'password': 'your_password',
+            'server': 'your_server',
+            'symbol': 'XAUUSD',
+            'trading_company': 'OANDA',
+            'percentage_of_risk': 0.01
+        },
+        {
+            "mt5_path": r"C:\mt5_2\terminal64.exe",
+            "login": 654321,
+            "password": "yourpass2",
+            "server": "Broker-Server2",
+            "symbol": "XAUUSD.r",
+            "trading_company": "OANDA",
+            "percentage_of_risk": 0.005
+        },
+        # Add more instances as needed
+    ]
+    run_multi_bots(instances)
