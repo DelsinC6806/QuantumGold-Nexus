@@ -86,11 +86,6 @@ def close_all_positions(symbol, trading_company):
             place_trade(symbol, "SELL", vol, 0, 0, tick.bid, trading_company)
         elif pos.type == mt5.POSITION_TYPE_SELL:
             place_trade(symbol, "BUY", vol, 0, 0, tick.ask, trading_company)
-
-
-    if not mt5.initialize(path=mt5_path):
-            print(f"initialize() failed for {instance_symbol}, {instance_name}")
-            return
     
     account_info = mt5.account_info()
     position = get_current_holding()
