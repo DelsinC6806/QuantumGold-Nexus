@@ -113,7 +113,7 @@ def trading_loop_master_slave(instances):
         now = datetime.now()
 
         #15 minutes loop start
-        if now.minute % 15 == 0 :#and (now.second in (0, 1, 2)):
+        if now.minute % 15 == 0 and (now.second in (0, 1, 2)):
             signal = 0
             if not mt5.initialize(path=master['mt5_path']):
                 print(f"Re-initializing MT5 failed for {master['symbol']}, {master['instance_name']}")
