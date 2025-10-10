@@ -2,7 +2,7 @@ import MetaTrader5 as mt5
 from datetime import datetime, timezone, timedelta
 import time
 import numpy as np
-from strategy import calculate_ema, calculate_atr
+from strategy import calculate_ema, calculate_atr, calculate_rsi
 from placetrade import place_trade
 from threading import Thread
 from multiprocessing import Process
@@ -15,32 +15,28 @@ atr_mult_sl = 1.0
 atr_mult_tp = 3.5
 contract_size = 100
 symbol = ""
+position = "None"
 instances = [
     {
-        'mt5_path': 'C:/Program Files/MetaTrader 5/terminal64.exe',
-        'instance_name': 'Fxify 100000',
+        'mt5_path': 'C:/Program Files/MetaTrader 5 - 2/terminal64.exe',
+        'instance_name': 'Fxify 50000',
         'symbol': 'XAUUSD.r',
         'trading_company': 'OANDA',
-        'percentage_of_risk': 0.005
-    },
-    {
-        "mt5_path": 'C:/Program Files/MetaTrader 5 - 2/terminal64.exe',
-        "instance_name": 'Fxify 25000',
-        "symbol": "XAUUSD.x",
-        "trading_company": "OANDA",
-        "percentage_of_risk": 0.005
+        'percentage_of_risk': 0.005,
+        'position_holding': "None"
     },
     {
         "mt5_path": 'C:/Program Files/MetaTrader 5 - 3/terminal64.exe',
         "instance_name": 'OANDA 10000',
         "symbol": "XAUUSD",
         "trading_company": "OANDA",
-        "percentage_of_risk": 0.005
+        "percentage_of_risk": 0.005,
+        'position_holding': "None"
     },
     # Add more instances as needed
 ]
 
-def count_trades_today_simple(log_path: str, target_date: str,symbol: str) -> int:
+def count_trades_today_simple(log_path: str, target_date: str) -> int:
     """
     只要 trade_log.txt 裡有幾行包含今天日期（格式: YYYY-MM-DD）
     """
@@ -48,9 +44,8 @@ def count_trades_today_simple(log_path: str, target_date: str,symbol: str) -> in
         return 0
     count = 0
     with open(log_path, 'r', encoding='utf-8') as f:
-        f.seek(0)
         for line in f:
-            if target_date in line and symbol in line:
+            if target_date in line:
                 count += 1
     return count
 
@@ -104,7 +99,7 @@ def trading_loop_master_slave(instances):
         today = datetime.now()
 
     today = today.strftime("%Y-%m-%d")
-    trade_count = count_trades_today_simple("trade_log.txt", today, master['symbol'])
+    trade_count = count_trades_today_simple("trade_log.txt", today)
     signal = 0
     last_bar_time = None  # 新K棒保護
 
@@ -166,7 +161,7 @@ def trading_loop_master_slave(instances):
             ema_200 = calculate_ema(close_prices, 200)
             atr14 = calculate_atr([{'high': bar['high'], 'low': bar['low'], 'close': bar['close']} for bar in rates], 14)
             atr250 = calculate_atr([{'high': bar['high'], 'low': bar['low'], 'close': bar['close']} for bar in rates], 250)
-            print(f"{master['instance_name']}:[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] EMA 5: {ema_fast[-1]:.2f}, EMA 20: {ema_slow[-1]:.2f}, EMA 200: {ema_200[-1]:.2f}\n")
+            print(f"{master['instance_name']}:[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] EMA 5: {ema_fast[-1]:.2f}, EMA 20: {ema_slow[-1]:.2f}, EMA 200: {ema_200[-1]:.2f}")
     
             #check trade count 
             if trade_count >= 1:
@@ -180,26 +175,46 @@ def trading_loop_master_slave(instances):
             else:
                 print(f"{master['instance_name']}: 波動率正常，準備下單")
 
-            if ema_fast[-2] < ema_slow[-2] and ema_fast[-1] > ema_slow[-1] and close_prices[-1] > ema_200[-1]:
+            if ema_fast[-2] < ema_slow[-2] and ema_fast[-1] > ema_slow[-1]:
                 signal = 1  # 多
-            elif ema_fast[-2] > ema_slow[-2] and ema_fast[-1] < ema_slow[-1] and close_prices[-1] < ema_200[-1]:
+                print(f"{master['instance_name']}: 多頭交叉，準備下多單")
+            elif ema_fast[-2] > ema_slow[-2] and ema_fast[-1] < ema_slow[-1]:
                 signal = -1 # 空
+                print(f"{master['instance_name']}: 空頭交叉，準備下空單")
             else:
                 signal = 0
+                print(f"{master['instance_name']}: 無交叉，暫不下單")
 
-        # 只有 signal 變化時才跟單
-        if signal != 0:
-            print(f"主信號: {signal}，所有 slave 開始跟單")
-            trade_count += 1
-            signal_Granted(master, close_prices, atr14, signal)
-            for slave in slaves:
-                signal_Granted(slave, close_prices, atr14, signal)
             
+            rsi = calculate_rsi(close_prices, 14)
+            if signal == 1 and rsi[-1] < 50:  # 或 55
+                signal = 0
+                print(f"{master['instance_name']}: 多頭交叉，但 RSI < 50，取消多單")
+            elif signal == -1 and rsi[-1] > 50:  # 或 45
+                signal = 0
+                print(f"{master['instance_name']}: 空頭交叉，但 RSI > 50，取消空單")
+
+            if signal == 1 and rsi[-1] > 70:
+                signal = 0
+                print(f"{master['instance_name']}: 多頭交叉，但 RSI > 70，取消多單")
+            elif signal == -1 and rsi[-1] < 30:
+                signal = 0
+                print(f"{master['instance_name']}: 空頭交叉，但 RSI < 30，取消空單")
+
+
+            # 只有 signal 變化時才跟單
+            if signal != 0 and position == "None":
+                print(f"主信號: {signal}，所有 slave 開始跟單")
+                trade_count += 1
+                signal_Granted(master, close_prices, atr14, signal, position)
+                #for slave in slaves:
+                    #signal_Granted(slave, close_prices, atr14, signal, position)
+                signal = 0
 
         time.sleep(1)
 
 
-def signal_Granted(instance, close_prices, atr, signal):
+def signal_Granted(instance, close_prices, atr, signal,position):
     if not mt5.initialize(path=instance['mt5_path']):
         print(f"initialize() failed for {instance['symbol']} {instance['instance_name']}")
     else:
@@ -218,6 +233,7 @@ def signal_Granted(instance, close_prices, atr, signal):
                 lot_raw = risk_per_trade / (sl_distance * contract_size)
                 lot = round_to_step(lot_raw, 0.01)
                 print(f"{instance['instance_name']}: 主帳 BUY: lot={lot:.2f}, sl={sl:.2f}, tp={tp:.2f}")
+                position = "BUY"
                 place_trade(instance['symbol'], "BUY", lot, sl, tp, entry_price, instance['trading_company'])
             elif signal == -1:
                 sl = entry_price + atr_mult_sl * atr_val
@@ -227,7 +243,9 @@ def signal_Granted(instance, close_prices, atr, signal):
                 lot_raw = risk_per_trade / (sl_distance * contract_size)
                 lot = round_to_step(lot_raw, 0.01)
                 print(f"{instance['instance_name']}: 主帳 SELL: lot={lot:.2f}, sl={sl:.2f}, tp={tp:.2f}")
+                position = "SELL"
                 place_trade(instance['symbol'], "SELL", lot, sl, tp, entry_price, instance['trading_company'])
+
         mt5.shutdown()
 
 if __name__ == "__main__":

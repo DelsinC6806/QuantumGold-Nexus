@@ -128,3 +128,15 @@ def calculate_atr(data, window=14):
     tr = np.maximum(high[1:] - low[1:], np.abs(high[1:] - close[:-1]), np.abs(low[1:] - close[:-1]))
     atr = pd.Series(tr).rolling(window=window).mean().values
     return np.concatenate([np.full(window, np.nan), atr])
+
+def calculate_rsi(prices, window=14):
+    prices = np.array(prices)
+    delta = np.diff(prices)
+    up = np.where(delta > 0, delta, 0)
+    down = np.where(delta < 0, -delta, 0)
+    roll_up = pd.Series(up).rolling(window=window).mean()
+    roll_down = pd.Series(down).rolling(window=window).mean()
+    rs = roll_up / roll_down
+    rsi = 100 - (100 / (1 + rs))
+    rsi = np.concatenate([np.full(window, np.nan), rsi])
+    return rsi

@@ -20,7 +20,7 @@ def backtest_dual_ema_atr(
     fast=5, 
     slow=20, 
     atr_mult_sl=1.0, 
-    atr_mult_tp=3.0,
+    atr_mult_tp=3.5,
     contract_size=100
 ):
     balance = initial_balance
@@ -34,14 +34,18 @@ def backtest_dual_ema_atr(
         # 只用到第i根的資料計算指標
         if('01:00:00' in data[i]['timestamp']):
            today_trade_count = 0
+        
         ema_fast = calculate_ema(close_prices[:i+1], fast)
         ema_slow = calculate_ema(close_prices[:i+1], slow)
         ema_200 = calculate_ema(close_prices[:i+1], 200)
         atr = calculate_atr(data[:i+1], 14)
+        atr14 = calculate_atr(data[:i+1], 14)
+        atr250 = calculate_atr(data[:i+1], 250)
         price = close_prices[i]
         signal = 0
 
-        if np.isnan(atr[-1]) or atr[-1] < np.nanmedian(atr[max(0, i-250):i]):
+        #if np.isnan(atr[-1]) or atr[-1] < np.nanmedian(atr[max(0, i-250):i]):
+        if np.isnan(atr14[-1]) or atr14[-1] < atr250[-1]:
             continue
 
         if today_trade_count >= 1:
@@ -49,10 +53,12 @@ def backtest_dual_ema_atr(
 
         # 產生訊號
 
-        if ema_fast[-2] < ema_slow[-2] and ema_fast[-1] > ema_slow[-1] and price < ema_200[-1]:
+        if ema_fast[-2] < ema_slow[-2] and ema_fast[-1] > ema_slow[-1] and close_prices[-1] > ema_200[-1]:
             signal = 1  # 多
-        elif ema_fast[-2] > ema_slow[-2] and ema_fast[-1] < ema_slow[-1] and price > ema_200[-1]:
+        elif ema_fast[-2] > ema_slow[-2] and ema_fast[-1] < ema_slow[-1] and close_prices[-1] < ema_200[-1]:
             signal = -1 # 空
+        else:
+            signal = 0
 
         # 平倉邏輯
         if position is not None:
