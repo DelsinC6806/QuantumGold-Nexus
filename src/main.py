@@ -17,8 +17,8 @@ contract_size = 100
 symbol = ""
 position = "None"
 instances = [
-    {
-        'mt5_path': 'C:/Program Files/MetaTrader 5 - 2/terminal64.exe',
+    {                                                                       
+        'mt5_path': 'C:/Program Files/MetaTrader 5/terminal64.exe',
         'instance_name': 'Fxify 50000',
         'symbol': 'XAUUSD.r',
         'trading_company': 'OANDA',
@@ -83,6 +83,7 @@ def close_all_positions(symbol, trading_company):
             place_trade(symbol, "BUY", vol, 0, 0, tick.ask, trading_company)
     
 def trading_loop_master_slave(instances):
+
     master = instances[0]
     slaves = instances[1:]
 
@@ -117,10 +118,6 @@ def trading_loop_master_slave(instances):
             account_info = mt5.account_info()
             if account_info is None:
                 print("取得帳戶資訊失敗")
-                time.sleep(1)
-                continue
-            if account_info.trade_allowed == False:
-                print("交易未啟用")
                 time.sleep(1)
                 continue
 
@@ -164,7 +161,7 @@ def trading_loop_master_slave(instances):
             print(f"{master['instance_name']}:[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] EMA 5: {ema_fast[-1]:.2f}, EMA 20: {ema_slow[-1]:.2f}, EMA 200: {ema_200[-1]:.2f}")
     
             #check trade count 
-            if trade_count >= 1:
+            if trade_count >= 3:
                 print(f"{master['instance_name']}: 已達日內最大交易數，暫停交易")
                 continue
 
@@ -213,39 +210,61 @@ def trading_loop_master_slave(instances):
 
         time.sleep(1)
 
-
-def signal_Granted(instance, close_prices, atr, signal,position):
+def signal_Granted(instance, close_prices, atr, signal, position,
+                   tp_distance=None, sl_distance=None):
+    """
+    Execute a trade based on signal, with dynamic ATR-based TP/SL distances.
+    """
     if not mt5.initialize(path=instance['mt5_path']):
         print(f"initialize() failed for {instance['symbol']} {instance['instance_name']}")
-    else:
-        account_info = mt5.account_info()
-        if account_info is None or not account_info.trade_allowed:
-            print(f"{instance['instance_name']}: 交易未啟用")
-        else:
-            balance = account_info.balance
-            entry_price = close_prices[-1]
-            atr_val = atr[-1]
-            if signal == 1:
-                sl = entry_price - atr_mult_sl * atr_val
-                tp = entry_price + atr_mult_tp * atr_val
-                sl_distance = abs(entry_price - sl)
-                risk_per_trade = balance * instance['percentage_of_risk']
-                lot_raw = risk_per_trade / (sl_distance * contract_size)
-                lot = round_to_step(lot_raw, 0.01)
-                print(f"{instance['instance_name']}: 主帳 BUY: lot={lot:.2f}, sl={sl:.2f}, tp={tp:.2f}")
-                position = "BUY"
-                place_trade(instance['symbol'], "BUY", lot, sl, tp, entry_price, instance['trading_company'])
-            elif signal == -1:
-                sl = entry_price + atr_mult_sl * atr_val
-                tp = entry_price - atr_mult_tp * atr_val
-                sl_distance = abs(sl - entry_price)
-                risk_per_trade = balance * instance['percentage_of_risk']
-                lot_raw = risk_per_trade / (sl_distance * contract_size)
-                lot = round_to_step(lot_raw, 0.01)
-                print(f"{instance['instance_name']}: 主帳 SELL: lot={lot:.2f}, sl={sl:.2f}, tp={tp:.2f}")
-                position = "SELL"
-                place_trade(instance['symbol'], "SELL", lot, sl, tp, entry_price, instance['trading_company'])
+        return
 
+    account_info = mt5.account_info()
+    if account_info is None or not account_info.trade_allowed:
+        print(f"{instance['instance_name']}: 交易未啟用")
+        return
+
+    balance = account_info.balance
+    entry_price = close_prices[-1]
+    atr_val = atr[-1]
+
+    # If no dynamic distances passed, fall back to ATR multiples
+    if tp_distance is None:
+        tp_distance = atr_val * 1.5
+    if sl_distance is None:
+        sl_distance = atr_val * 1.0
+
+    if signal == 1:  # BUY
+        sl = entry_price - sl_distance
+        tp = entry_price + tp_distance
+        risk_per_trade = balance * instance['percentage_of_risk']
+        lot_raw = risk_per_trade / (sl_distance * contract_size)
+        lot = round_to_step(lot_raw, 0.01)
+        print(f"{instance['instance_name']}: 主帳 BUY: lot={lot:.2f}, sl={sl:.2f}, tp={tp:.2f}")
+        if(lot >= 0.16): #大於等於0.16手反向下單
+            position = "SELL"
+            place_trade(instance['symbol'], position, lot, tp, sl,entry_price, instance['trading_company'])
+        else:
+            position = "BUY"
+            place_trade(instance['symbol'], position, lot, sl, tp,entry_price, instance['trading_company'])  
+        
+
+      
+
+
+    elif signal == -1:  # SELL
+        sl = entry_price + sl_distance
+        tp = entry_price - tp_distance
+        risk_per_trade = balance * instance['percentage_of_risk']
+        lot_raw = risk_per_trade / (sl_distance * contract_size)
+        lot = round_to_step(lot_raw, 0.01)
+        print(f"{instance['instance_name']}: 主帳 SELL: lot={lot:.2f}, sl={sl:.2f}, tp={tp:.2f}")
+        if(lot >= 0.16): #大於等於0.16手反向下單
+            position = "BUY"
+            place_trade(instance['symbol'], position, lot, tp, sl,entry_price, instance['trading_company'])
+        else:
+            position = "SELL"
+            place_trade(instance['symbol'], position, lot, sl, tp,entry_price, instance['trading_company']) 
         mt5.shutdown()
 
 if __name__ == "__main__":
