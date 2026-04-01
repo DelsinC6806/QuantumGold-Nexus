@@ -75,7 +75,7 @@ def backtest_strategy(data, initial_balance=100000):
         atr14_series = calculate_atr(m15_slice, 14)
         atr250_series = calculate_atr(m15_slice, 250)
         atr14_slope = atr14_series[-1] - atr14_series[-2]
-        is_volatility_rising = atr14_slope > 0
+
 
         signal = 0
         # --- Entry logic ---
@@ -137,7 +137,7 @@ def backtest_strategy(data, initial_balance=100000):
             atr_val = atr14_series[-1]
             if signal == 1:
                 sl = entry - atr_val * 1
-                tp = entry + atr_val * 3
+                tp = entry + atr_val * 3.5
                 sl_distance = abs(entry - sl)
                 risk_amount = balance * risk_per_trade_pct
                 lot = risk_amount / (sl_distance * contract_size)
@@ -145,7 +145,7 @@ def backtest_strategy(data, initial_balance=100000):
                     'type': 'BUY', 
                     'entry': entry, 
                     'sl': sl, 
-                    'sl_initial': sl,  # <--- 必須加上這一行
+                    'sl_initial': sl,  
                     'tp': tp, 
                     'lot': lot
                 }
@@ -159,7 +159,7 @@ def backtest_strategy(data, initial_balance=100000):
                     'type': 'BUY', 
                     'entry': entry, 
                     'sl': sl, 
-                    'sl_initial': sl,  # <--- 必須加上這一行
+                    'sl_initial': sl, 
                     'tp': tp, 
                     'lot': lot
                 }
