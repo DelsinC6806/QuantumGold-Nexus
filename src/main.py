@@ -19,19 +19,23 @@ position = "None"
 instances = [
     {                                                                       
         'mt5_path': 'C:/Program Files/MetaTrader 5/terminal64.exe',
-        'instance_name': 'Fxify 25000',
+        'instance_name': 'Fxify',
         'symbol': ['USDJPY.r','GBPUSD.r','EURUSD.r'],
         'trading_company': 'OANDA',
         'percentage_of_risk': 0.005,
-        'position_holding': "None"
+        'position_holding': "None",
+        'trade_count': 0,
+        'magic_numeber': 111111
     },
     {
-        "mt5_path": 'C:/Program Files/MetaTrader 5 - 3/terminal64.exe',
-        "instance_name": 'OANDA 10000',
-        "symbol": "XAUUSD",
+        "mt5_path": 'C:/Program Files/MetaTrader 5 - Fundingpips/terminal64.exe',
+        "instance_name": 'FundingPips',
+        "symbol": ["USDJPY","GBPUSD","EURUSD"],
         "trading_company": "OANDA",
         "percentage_of_risk": 0.005,
-        'position_holding': "None"
+        'position_holding': "None",
+        'trade_count': 0,
+        'magic_number': 000000
     },
     # Add more instances as needed
 ]
@@ -85,7 +89,6 @@ def close_all_positions(symbol, trading_company):
 def trading_loop_master_slave(instances):
 
     master = instances[0]
-    slaves = instances[1:]
 
     if not mt5.initialize(path=master['mt5_path']):
             print(f"initialize() failed for {master['symbol']}, {master['instance_name']}")
@@ -102,7 +105,6 @@ def trading_loop_master_slave(instances):
     today = today.strftime("%Y-%m-%d")
     trade_count = count_trades_today_simple("trade_log.txt", today)
     signal = 0
-    last_bar_time = None  # 新K棒保護
 
     #loop start
     while True:
@@ -140,6 +142,7 @@ def trading_loop_master_slave(instances):
             #session filter
             if not (7 <= now.hour < 23):
                 print(f"not 7-23")
+                time.sleep(1)
                 continue    
 
             # 15 minutes checking
@@ -148,7 +151,7 @@ def trading_loop_master_slave(instances):
             #Strategy start here
 
             #get h1 data (200 bar)
-            for symbol in master['symbol']:
+            for i ,symbol in enumerate(master['symbol']):
                 rates_h1 = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_H1, 1, 200)
                 close_h1 = [bar['close'] for bar in rates_h1]
                 h1_ema50 = calculate_ema(close_h1, 50)[-1]
@@ -177,10 +180,9 @@ def trading_loop_master_slave(instances):
                 curr_ema50 = m15_ema50[-1]
                 curr_rsi = rsi[-1]
 
-                atr14_series = calculate_atr(rates_m15, 14)
                 atr250_series = calculate_atr(rates_m15, 250)
-                atr14_slope = atr14_series[-1] - atr14_series[-2]
-                is_volatility_rising = atr14_slope > 0
+                atr_sma5 = sum(atr250_series[-5:]) / 5
+                is_volatility_rising = atr250_series[-1] > atr_sma5
 
                 print(f"{master['instance_name']} [{symbol}] :[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}]")
                 print(f"H1 EMA 50:{h1_ema50:.2f}, H1 EMA 200: {h1_ema200:.2f}")
@@ -190,12 +192,14 @@ def trading_loop_master_slave(instances):
                 # A. 大勢: H1 EMA50 > EMA200
                 # B. 回測: M15 Low 觸碰 EMA50 且 Close 收回上方
                 # C. 動能: RSI 在 45-60 
+                # D. volatility is rising
                 if is_h1_bullish and (m15_ema50[-1] > m15_ema200[-1]):
                     if curr_low <= curr_ema50 and curr_close > curr_ema50:
                         if (45 < curr_rsi < 60):
-                            signal = 1
-                            print("H1 順勢 + M15 回測成功: 準備買入")
-                            print(f"確認多頭動能: RSI {curr_rsi:.2f}, Slope: {rsi_slope:.2f}")
+                            if is_volatility_rising:
+                                signal = 1
+                                print("H1 順勢 + M15 回測成功: 準備買入")
+                                print(f"確認多頭動能: RSI {curr_rsi:.2f}, Slope: {rsi_slope:.2f}")
 
                 # 【空頭入場】
                 # A. 大勢: H1 EMA50 < EMA200
@@ -204,22 +208,26 @@ def trading_loop_master_slave(instances):
                 elif is_h1_bearish and (m15_ema50[-1] < m15_ema200[-1]):
                     if curr_high >= curr_ema50 and curr_close < curr_ema50:
                         if (40 < curr_rsi < 55):
-                            signal = -1
-                            print("H1 逆勢 + M15 回測成功: 準備放空")
-                            print(f"確認空頭動能: RSI {curr_rsi:.2f}, Slope: {rsi_slope:.2f}")
+                            if is_volatility_rising:
+                                signal = -1
+                                print("H1 逆勢 + M15 回測成功: 準備放空")
+                                print(f"確認空頭動能: RSI {curr_rsi:.2f}, Slope: {rsi_slope:.2f}")
 
 
                 # 只有 signal 變化時才跟單
-                if signal != 0 and get_current_holding() == "None" and trade_count < 3:
-                    atr14_val = calculate_atr(rates_m15, 14)[-1]
-                    sl_dist = atr14_val * atr_mult_sl
-                    tp_dist = atr14_val * atr_mult_tp
-                    signal_Granted(master,symbol, [atr14_val], signal,tp_dist,sl_dist)
-                    trade_count += 1
+                if signal != 0:
+                    for instance in instances:
+                        if instance[trade_count] < 3:
+                            atr14_val = calculate_atr(rates_m15, 14)[-1]
+                            sl_dist = atr14_val * atr_mult_sl
+                            tp_dist = atr14_val * atr_mult_tp
+                            signal_Granted(instance,instance['symbol'][i], signal,tp_dist,sl_dist)
+                            instance[trade_count] += 1
+                    time.sleep(900)
 
         time.sleep(1)
 
-def signal_Granted(instance,symbol, atr, signal,tp_dist, sl_dist):
+def signal_Granted(instance,symbol, signal,tp_dist, sl_dist):
     """
     執行基於信號的交易，具備精確的 0.5% 風險控制與 XAUUSD 規格修正。
     """
@@ -238,15 +246,10 @@ def signal_Granted(instance,symbol, atr, signal,tp_dist, sl_dist):
     
     # --- 1. 計算進場價與止損空間 ---
     # 如果外部沒傳入距離，預設使用 ATR (SL=1.5x, TP=3.5x)
-    atr_val = atr[-1] if isinstance(atr, (list, np.ndarray)) else atr
     balance = account_info.balance
     risk_amount = balance * instance['percentage_of_risk']
     print(f"Risk amount : {risk_amount}")
-    #original lot calculation (work)
-    #lot_raw = risk_per_trade / (sl_distance * contract_size)
-    #lot = round_to_step(lot_raw, 0.01)
 
-    #new lot calculation (test)
     # 1. 獲取當前品種的 Tick 資訊
     tick_size = symbol_info.trade_tick_size    # 最小跳動 (如 0.001 或 0.00001)
     tick_value = symbol_info.trade_tick_value  # 每一跳動值多少美金 (MT5 自動換算)
@@ -280,7 +283,6 @@ def signal_Granted(instance,symbol, atr, signal,tp_dist, sl_dist):
         print(f"[{instance['instance_name']}] 執行 SELL | Risk: {risk_amount:.2f} | Lot: {lot:.2f} | SL: {sl:.2f} | TP: {tp:.2f}")
         place_trade(symbol, "SELL", lot, sl, tp, entry_price, instance['trading_company'])
         signal = 0
-    time.sleep(900)
 
 if __name__ == "__main__":
     trading_loop_master_slave(instances)

@@ -1085,3 +1085,102 @@ Stop-Loss: 1.147325
 Take-Profit: 1.144912
 Timestamp: 2026-03-31 16:15:01
 ----------------------------------------
+Trade Executed:
+Symbol: USDJPY.r
+Action: SELL
+Lot Size: 1.5
+Executed Price: 158.727
+Stop-Loss: 158.75914285714288
+Take-Profit: 158.257
+Timestamp: 2026-04-01 22:00:00
+----------------------------------------
+Trade Executed:
+Symbol: USDJPY.r
+Action: SELL
+Lot Size: 1.3900000000000001
+Executed Price: 158.545
+Stop-Loss: 158.68857142857144
+Take-Profit: 158.14679999999998
+Timestamp: 2026-04-01 22:30:00
+----------------------------------------
+Trade Executed:
+Symbol: USDJPY.r
+Action: SELL
+Lot Size: 1.34
+Executed Price: 158.537
+Stop-Loss: 158.68985714285714
+Take-Profit: 158.128
+Timestamp: 2026-04-01 22:45:02
+----------------------------------------
+Trade Executed:
+Symbol: EURUSD.r
+Action: BUY
+Lot Size: 3.5300000000000002
+Executed Price: 1.15933
+Stop-Loss: 1.15898
+Take-Profit: 1.16031
+Timestamp: 2026-04-02 08:15:02
+----------------------------------------
+Trade Executed:
+Symbol: USDJPY.r
+Action: SELL
+Lot Size: 2.14
+Executed Price: 158.648
+Stop-Loss: 158.73992857142858
+Take-Profit: 158.39440000000002
+Timestamp: 2026-04-02 08:45:01
+----------------------------------------
+Trade Executed:
+Symbol: USDJPY.r
+Action: BUY
+Lot Size: 4.72
+Executed Price: 159.525
+Stop-Loss: 159.48464285714286
+Take-Profit: 159.64180000000002
+Timestamp: 2026-04-03 08:30:01
+----------------------------------------
+Trade Executed:
+Symbol: EURUSD.r
+Action: SELL
+Lot Size: 5.32
+Executed Price: 1.1538
+Stop-Loss: 1.1540285714285714
+Take-Profit: 1.1531599999999997
+Timestamp: 2026-04-03 09:00:02
+----------------------------------------
+Trade Executed:
+Symbol: EURUSD.r
+Action: SELL
+Lot Size: 5.34
+Executed Price: 1.1538599999999999
+Stop-Loss: 1.1540864285714285
+Take-Profit: 1.1532259999999996
+Timestamp: 2026-04-03 09:30:01
+----------------------------------------
+Trade Executed:
+Symbol: USDJPY.r
+Action: BUY
+Lot Size: 1.21
+Executed Price: 159.705
+Stop-Loss: 159.5424285714286
+Take-Profit: 160.15640000000002
+Timestamp: 2026-04-06 07:15:00
+----------------------------------------
+Trade Executed:
+Symbol: USDJPY.r
+Action: BUY
+Lot Size: 1.97
+Executed Price: 159.724
+Stop-Loss: 159.6285
+Take-Profit: 160.0028
+Timestamp: 2026-04-07 18:30:01
+----------------------------------------
+Trade Executed:
+Symbol: EURUSD.r
+Action: BUY
+Lot Size: 1.22
+Executed Price: 1.15533
+Stop-Loss: 1.154302857142857
+Take-Profit: 1.158092
+Timestamp: 2026-04-07 18:45:02
+----------------------------------------
