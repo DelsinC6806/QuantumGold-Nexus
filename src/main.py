@@ -27,16 +27,6 @@ instances = [
         'trade_count': 0,
         'magic_numeber': 111111
     },
-    {
-        "mt5_path": 'C:/Program Files/MetaTrader 5 - Fundingpips/terminal64.exe',
-        "instance_name": 'FundingPips',
-        "symbol": ["USDJPY","GBPUSD","EURUSD"],
-        "trading_company": "OANDA",
-        "percentage_of_risk": 0.005,
-        'position_holding': "None",
-        'trade_count': 0,
-        'magic_number': 000000
-    },
     # Add more instances as needed
 ]
 
