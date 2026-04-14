@@ -19,8 +19,8 @@ position = "None"
 instances = [
     {                                                                       
         'mt5_path': 'C:/Program Files/MetaTrader 5/terminal64.exe',
-        'instance_name': 'Fxify',
-        'symbol': ['USDJPY.r','GBPUSD.r','EURUSD.r'],
+        'instance_name': 'FundingPips',
+        'symbol': ['USDJPY','GBPUSD','EURUSD','EURJPY'],
         'trading_company': 'OANDA',
         'percentage_of_risk': 0.005,
         'position_holding': "None",
@@ -135,9 +135,6 @@ def trading_loop_master_slave(instances):
                 time.sleep(1)
                 continue    
 
-            # 15 minutes checking
-            position = get_current_holding()
-
             #Strategy start here
 
             #get h1 data (200 bar)
@@ -170,9 +167,9 @@ def trading_loop_master_slave(instances):
                 curr_ema50 = m15_ema50[-1]
                 curr_rsi = rsi[-1]
 
-                atr250_series = calculate_atr(rates_m15, 250)
-                atr_sma5 = sum(atr250_series[-5:]) / 5
-                is_volatility_rising = atr250_series[-1] > atr_sma5
+                atr14_series = calculate_atr(rates_m15, 14)
+                atr_sma5 = sum(atr14_series[-5:]) / 5
+                is_volatility_rising = atr14_series[-1] > atr14_series[-4]
 
                 print(f"{master['instance_name']} [{symbol}] :[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}]")
                 print(f"H1 EMA 50:{h1_ema50:.2f}, H1 EMA 200: {h1_ema200:.2f}")
@@ -185,7 +182,7 @@ def trading_loop_master_slave(instances):
                 # D. volatility is rising
                 if is_h1_bullish and (m15_ema50[-1] > m15_ema200[-1]):
                     if curr_low <= curr_ema50 and curr_close > curr_ema50:
-                        if (45 < curr_rsi < 60):
+                        if (45 < curr_rsi < 65):
                             if is_volatility_rising:
                                 signal = 1
                                 print("H1 順勢 + M15 回測成功: 準備買入")
@@ -197,7 +194,7 @@ def trading_loop_master_slave(instances):
                 # C. 動能: RSI 在 40-55
                 elif is_h1_bearish and (m15_ema50[-1] < m15_ema200[-1]):
                     if curr_high >= curr_ema50 and curr_close < curr_ema50:
-                        if (40 < curr_rsi < 55):
+                        if (35 < curr_rsi < 60):
                             if is_volatility_rising:
                                 signal = -1
                                 print("H1 逆勢 + M15 回測成功: 準備放空")
@@ -207,12 +204,12 @@ def trading_loop_master_slave(instances):
                 # 只有 signal 變化時才跟單
                 if signal != 0:
                     for instance in instances:
-                        if instance[trade_count] < 3:
+                        if trade_count < 3:
                             atr14_val = calculate_atr(rates_m15, 14)[-1]
                             sl_dist = atr14_val * atr_mult_sl
                             tp_dist = atr14_val * atr_mult_tp
                             signal_Granted(instance,instance['symbol'][i], signal,tp_dist,sl_dist)
-                            instance[trade_count] += 1
+                            trade_count += 1
                     time.sleep(900)
 
         time.sleep(1)
