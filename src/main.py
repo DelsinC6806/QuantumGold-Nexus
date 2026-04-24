@@ -19,8 +19,8 @@ position = "None"
 instances = [
     {                                                                       
         'mt5_path': 'C:/Program Files/MetaTrader 5/terminal64.exe',
-        'instance_name': 'FundingPips',
-        'symbol': ['USDJPY','GBPUSD','EURUSD','EURJPY'],
+        'instance_name': 'FXIFY',
+        'symbol': ['GBPUSD.r','EURJPY.r','XAUUSD.r'],
         'trading_company': 'OANDA',
         'percentage_of_risk': 0.005,
         'position_holding': "None",
@@ -210,7 +210,7 @@ def trading_loop_master_slave(instances):
                             tp_dist = atr14_val * atr_mult_tp
                             signal_Granted(instance,instance['symbol'][i], signal,tp_dist,sl_dist)
                             trade_count += 1
-                    time.sleep(900)
+                    time.sleep(1800)
 
         time.sleep(1)
 

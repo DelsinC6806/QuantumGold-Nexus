@@ -1211,3 +1211,165 @@ Stop-Loss: 187.19285714285712
 Take-Profit: 187.581
 Timestamp: 2026-04-14 17:30:01
 ----------------------------------------
+Trade Executed:
+Symbol: EURJPY.r
+Action: BUY
+Lot Size: 3.81
+Executed Price: 187.359
+Stop-Loss: 187.30685714285715
+Take-Profit: 187.50500000000002
+Timestamp: 2026-04-15 08:15:01
+----------------------------------------
+Trade Executed:
+Symbol: USDJPY.r
+Action: SELL
+Lot Size: 3.24
+Executed Price: 158.828
+Stop-Loss: 158.88978571428572
+Take-Profit: 158.6588
+Timestamp: 2026-04-15 09:00:01
+----------------------------------------
+Trade Executed:
+Symbol: GBPUSD.r
+Action: BUY
+Lot Size: 2.58
+Executed Price: 1.35696
+Stop-Loss: 1.3564914285714287
+Take-Profit: 1.35831
+Timestamp: 2026-04-15 13:45:00
+----------------------------------------
+Trade Executed:
+Symbol: GBPUSD.r
+Action: BUY
+Lot Size: 3.0
+Executed Price: 1.35698
+Stop-Loss: 1.3565714285714288
+Take-Profit: 1.358124
+Timestamp: 2026-04-16 10:00:01
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.r
+Action: BUY
+Lot Size: 2.98
+Executed Price: 187.54
+Stop-Loss: 187.47485714285713
+Take-Profit: 187.7262
+Timestamp: 2026-04-16 10:45:00
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.r
+Action: BUY
+Lot Size: 2.48
+Executed Price: 187.73
+Stop-Loss: 187.6527142857143
+Take-Profit: 187.954
+Timestamp: 2026-04-17 20:30:02
+----------------------------------------
+Trade Executed:
+Symbol: GBPUSD.r
+Action: BUY
+Lot Size: 2.06
+Executed Price: 1.35257
+Stop-Loss: 1.3520432142857144
+Take-Profit: 1.3543110000000003
+Timestamp: 2026-04-21 13:30:01
+----------------------------------------
+Trade Executed:
+Symbol: GBPUSD.r
+Action: BUY
+Lot Size: 1.75
+Executed Price: 1.35274
+Stop-Loss: 1.3520435714285715
+Take-Profit: 1.3546900000000002
+Timestamp: 2026-04-21 14:15:02
+----------------------------------------
+Trade Executed:
+Symbol: UKOil.r
+Action: SELL
+Lot Size: 0.26
+Executed Price: 90.908
+Stop-Loss: 91.36921428571428
+Take-Profit: 89.6128
+Timestamp: 2026-04-21 15:45:02
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.r
+Action: BUY
+Lot Size: 1.9000000000000001
+Executed Price: 187.176
+Stop-Loss: 187.07385714285715
+Take-Profit: 187.4582
+Timestamp: 2026-04-22 15:45:01
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD.r
+Action: SELL
+Lot Size: 0.12
+Executed Price: 4748.62
+Stop-Loss: 4758.451785714286
+Take-Profit: 4721.813
+Timestamp: 2026-04-22 19:45:01
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD.r
+Action: SELL
+Lot Size: 0.12
+Executed Price: 4751.91
+Stop-Loss: 4761.990714285714
+Take-Profit: 4724.4439999999995
+Timestamp: 2026-04-22 20:15:03
+----------------------------------------
+Trade Executed:
+Symbol: GBPUSD.r
+Action: SELL
+Lot Size: 1.43
+Executed Price: 1.35042
+Stop-Loss: 1.3512653571428572
+Take-Profit: 1.348053
+Timestamp: 2026-04-23 08:30:00
+----------------------------------------
+Trade Executed:
+Symbol: GBPUSD.r
+Action: SELL
+Lot Size: 1.27
+Executed Price: 1.3504399999999999
+Stop-Loss: 1.3513892857142855
+Take-Profit: 1.3477819999999998
+Timestamp: 2026-04-23 09:15:01
+----------------------------------------
+Trade Executed:
+Symbol: GBPUSD.r
+Action: SELL
+Lot Size: 1.24
+Executed Price: 1.34993
+Stop-Loss: 1.3508928571428571
+Take-Profit: 1.347196
+Timestamp: 2026-04-23 10:00:01
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.r
+Action: SELL
+Lot Size: 3.17
+Executed Price: 186.602
+Stop-Loss: 186.6622142857143
+Take-Profit: 186.4334
+Timestamp: 2026-04-24 07:15:02
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD.r
+Action: SELL
+Lot Size: 0.14
+Executed Price: 4698.35
+Stop-Loss: 4706.434285714286
+Take-Profit: 4676.1320000000005
+Timestamp: 2026-04-24 09:30:01
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.r
+Action: SELL
+Lot Size: 3.4
+Executed Price: 186.636
+Stop-Loss: 186.69178571428571
+Take-Profit: 186.47979999999998
+Timestamp: 2026-04-24 10:30:01
+----------------------------------------
