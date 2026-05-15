@@ -1373,3 +1373,354 @@ Stop-Loss: 186.69178571428571
 Take-Profit: 186.47979999999998
 Timestamp: 2026-04-24 10:30:01
 ----------------------------------------
+Trade Executed:
+Symbol: GBPUSD.r
+Action: SELL
+Lot Size: 0.52
+Executed Price: 1.35043
+Stop-Loss: 1.3528007142857144
+Take-Profit: 1.343944
+Timestamp: 2026-04-29 20:00:02
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.r
+Action: BUY
+Lot Size: 0.66
+Executed Price: 186.965
+Stop-Loss: 186.66757142857142
+Take-Profit: 187.7864
+Timestamp: 2026-04-29 20:00:03
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD.r
+Action: SELL
+Lot Size: 0.03
+Executed Price: 4561.44
+Stop-Loss: 4593.255714285714
+Take-Profit: 4472.393999999999
+Timestamp: 2026-04-29 20:00:05
+----------------------------------------
+Trade Executed:
+Symbol: GBPUSD.r
+Action: BUY
+Lot Size: 0.89
+Executed Price: 1.35183
+Stop-Loss: 1.3504564285714287
+Take-Profit: 1.3556380000000001
+Timestamp: 2026-04-30 20:00:02
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.r
+Action: SELL
+Lot Size: 0.32
+Executed Price: 183.043
+Stop-Loss: 183.63214285714287
+Take-Profit: 181.3934
+Timestamp: 2026-04-30 20:00:03
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD.r
+Action: BUY
+Lot Size: 0.12
+Executed Price: 4630.49
+Stop-Loss: 4620.902142857142
+Take-Profit: 4657.487999999999
+Timestamp: 2026-04-30 20:00:03
+----------------------------------------
+Trade Executed:
+Symbol: GBPUSD.r
+Action: BUY
+Lot Size: 1.45
+Executed Price: 1.36194
+Stop-Loss: 1.3612164285714285
+Take-Profit: 1.364384
+Timestamp: 2026-05-01 20:00:02
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.r
+Action: SELL
+Lot Size: 1.46
+Executed Price: 184.051
+Stop-Loss: 184.17828571428572
+Take-Profit: 183.68699999999998
+Timestamp: 2026-05-01 20:00:02
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD.r
+Action: SELL
+Lot Size: 0.16
+Executed Price: 4578.55
+Stop-Loss: 4585.517857142857
+Take-Profit: 4558.356000000001
+Timestamp: 2026-05-01 20:00:03
+----------------------------------------
+Trade Executed:
+Symbol: GBPUSD.r
+Action: SELL
+Lot Size: 1.1400000000000001
+Executed Price: 1.35407
+Stop-Loss: 1.3550778571428572
+Take-Profit: 1.3510579999999999
+Timestamp: 2026-05-04 20:00:02
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.r
+Action: BUY
+Lot Size: 2.04
+Executed Price: 183.807
+Stop-Loss: 183.71664285714286
+Take-Profit: 184.0714
+Timestamp: 2026-05-04 20:00:03
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD.r
+Action: SELL
+Lot Size: 0.1
+Executed Price: 4560.59
+Stop-Loss: 4572.2242857142855
+Take-Profit: 4527.8240000000005
+Timestamp: 2026-05-04 20:00:03
+----------------------------------------
+Trade Executed:
+Symbol: GBPUSD.r
+Action: BUY
+Lot Size: 1.28
+Executed Price: 1.35415
+Stop-Loss: 1.3531914285714286
+Take-Profit: 1.35672
+Timestamp: 2026-05-05 20:00:02
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.r
+Action: BUY
+Lot Size: 1.11
+Executed Price: 184.408
+Stop-Loss: 184.2400714285714
+Take-Profit: 184.882
+Timestamp: 2026-05-05 20:00:02
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD.r
+Action: BUY
+Lot Size: 0.15
+Executed Price: 4563.2
+Stop-Loss: 4555.575714285715
+Take-Profit: 4584.738
+Timestamp: 2026-05-05 20:00:03
+----------------------------------------
+Trade Executed:
+Symbol: GBPUSD.r
+Action: BUY
+Lot Size: 0.93
+Executed Price: 1.36222
+Stop-Loss: 1.360995
+Take-Profit: 1.365878
+Timestamp: 2026-05-06 20:00:02
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.r
+Action: BUY
+Lot Size: 1.19
+Executed Price: 183.723
+Stop-Loss: 183.5677857142857
+Take-Profit: 184.1614
+Timestamp: 2026-05-06 20:00:03
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD.r
+Action: BUY
+Lot Size: 0.09
+Executed Price: 4692.51
+Stop-Loss: 4679.267142857143
+Take-Profit: 4728.032
+Timestamp: 2026-05-06 20:00:03
+----------------------------------------
+Trade Executed:
+Symbol: GBPUSD.r
+Action: BUY
+Lot Size: 1.68
+Executed Price: 1.36185
+Stop-Loss: 1.3611614285714286
+Take-Profit: 1.3638160000000001
+Timestamp: 2026-05-07 20:00:02
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.r
+Action: BUY
+Lot Size: 2.15
+Executed Price: 184.098
+Stop-Loss: 184.0064285714286
+Take-Profit: 184.3316
+Timestamp: 2026-05-07 20:00:03
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD.r
+Action: BUY
+Lot Size: 0.13
+Executed Price: 4742.3
+Stop-Loss: 4733.555714285714
+Take-Profit: 4766.708
+Timestamp: 2026-05-07 20:00:03
+----------------------------------------
+Trade Executed:
+Symbol: GBPUSD.r
+Action: BUY
+Lot Size: 1.69
+Executed Price: 1.36137
+Stop-Loss: 1.3606942857142856
+Take-Profit: 1.3633
+Timestamp: 2026-05-08 20:00:01
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.r
+Action: BUY
+Lot Size: 2.99
+Executed Price: 184.414
+Stop-Loss: 184.36228571428572
+Take-Profit: 184.59300000000002
+Timestamp: 2026-05-08 20:00:02
+----------------------------------------
+Trade Executed:
+Symbol: US500.r
+Action: BUY
+Lot Size: 0.29
+Executed Price: 7383.13
+Stop-Loss: 7379.505714285714
+Take-Profit: 7394.228
+Timestamp: 2026-05-08 20:00:04
+----------------------------------------
+Trade Executed:
+Symbol: GBPUSD.r
+Action: BUY
+Lot Size: 1.2
+Executed Price: 1.36081
+Stop-Loss: 1.3598249999999998
+Take-Profit: 1.363492
+Timestamp: 2026-05-11 20:00:02
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.r
+Action: BUY
+Lot Size: 2.91
+Executed Price: 184.912
+Stop-Loss: 184.8492857142857
+Take-Profit: 185.0876
+Timestamp: 2026-05-11 20:00:03
+----------------------------------------
+Trade Executed:
+Symbol: US500.r
+Action: BUY
+Lot Size: 0.3
+Executed Price: 7397.53
+Stop-Loss: 7393.744285714285
+Take-Profit: 7408.13
+Timestamp: 2026-05-11 20:00:03
+----------------------------------------
+Trade Executed:
+Symbol: GBPUSD.r
+Action: SELL
+Lot Size: 0.48
+Executed Price: 1.35324
+Stop-Loss: 1.3556138307728587
+Take-Profit: 1.3447515922949942
+Timestamp: 2026-05-12 20:00:02
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.r
+Action: SELL
+Lot Size: 1.69
+Executed Price: 185.043
+Stop-Loss: 185.15828531756432
+Take-Profit: 184.67100138852496
+Timestamp: 2026-05-12 20:00:03
+----------------------------------------
+Trade Executed:
+Symbol: US500.r
+Action: SELL
+Lot Size: 0.19
+Executed Price: 7391.87
+Stop-Loss: 7397.760977762647
+Take-Profit: 7371.251577830736
+Timestamp: 2026-05-12 20:00:03
+----------------------------------------
+Trade Executed:
+Symbol: GBPUSD.r
+Action: SELL
+Lot Size: 0.78
+Executed Price: 1.3504
+Stop-Loss: 1.3518823214285716
+Take-Profit: 1.3462875
+Timestamp: 2026-05-13 20:00:01
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.r
+Action: SELL
+Lot Size: 2.06
+Executed Price: 184.775
+Stop-Loss: 184.8633035714286
+Take-Profit: 184.52774999999997
+Timestamp: 2026-05-13 20:00:02
+----------------------------------------
+Trade Executed:
+Symbol: US500.r
+Action: BUY
+Lot Size: 0.19
+Executed Price: 7426.93
+Stop-Loss: 7420.831785714286
+Take-Profit: 7443.055
+Timestamp: 2026-05-13 20:00:03
+----------------------------------------
+Trade Executed:
+Symbol: GBPUSD.r
+Action: SELL
+Lot Size: 1.2
+Executed Price: 1.34981
+Stop-Loss: 1.3508510714285713
+Take-Profit: 1.347275
+Timestamp: 2026-05-14 20:00:02
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.r
+Action: SELL
+Lot Size: 2.79
+Executed Price: 184.833
+Stop-Loss: 184.89319642857143
+Take-Profit: 184.64925000000002
+Timestamp: 2026-05-14 20:00:03
+----------------------------------------
+Trade Executed:
+Symbol: US500.r
+Action: BUY
+Lot Size: 0.12
+Executed Price: 7476.73
+Stop-Loss: 7467.902321428571
+Take-Profit: 7501.447499999999
+Timestamp: 2026-05-14 20:00:03
+----------------------------------------
+Trade Executed:
+Symbol: GBPUSD.x
+Action: SELL
+Lot Size: 3.4
+Executed Price: 1.3378700000000001
+Stop-Loss: 1.3393404162675924
+Take-Profit: 1.3362525421056486
+Timestamp: 2026-05-15 09:15:02
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.x
+Action: BUY
+Lot Size: 6.6000000000000005
+Executed Price: 184.703
+Stop-Loss: 184.58510258551578
+Take-Profit: 184.83688715593266
+Timestamp: 2026-05-15 09:15:02
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD.x
+Action: SELL
+Lot Size: 0.17
+Executed Price: 4614.51
+Stop-Loss: 4642.703550469313
+Take-Profit: 4583.644094483756
+Timestamp: 2026-05-15 09:15:04
+----------------------------------------

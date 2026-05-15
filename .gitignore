@@ -128,3 +128,4 @@ trade_log.txt
 /src/__pycache__/
 /src/*.pyc
 /src/dist/
+trade_log.txt

@@ -2,6 +2,7 @@ import MetaTrader5 as mt5
 from datetime import datetime, timezone, timedelta
 import time
 import numpy as np
+import pandas as pd
 from strategy import calculate_ema, calculate_atr, calculate_rsi
 from placetrade import place_trade
 from threading import Thread
@@ -11,8 +12,8 @@ import os
 
 fast = 5
 slow = 20
-atr_mult_sl = 1.0
-atr_mult_tp = 2.8   #lower 3.5 to 3.0 for better result
+atr_mult_sl = 2.0
+atr_mult_tp = 5.0   #lower 3.5 to 3.0 for better result
 contract_size = 100
 symbol = ""
 position = "None"
@@ -20,7 +21,7 @@ instances = [
     {                                                                       
         'mt5_path': 'C:/Program Files/MetaTrader 5/terminal64.exe',
         'instance_name': 'FXIFY',
-        'symbol': ['GBPUSD.r','EURJPY.r','XAUUSD.r'],
+        'symbol': ['GBPUSD.x','EURJPY.x','XAUUSD.x'],
         'trading_company': 'OANDA',
         'percentage_of_risk': 0.005,
         'position_holding': "None",
@@ -75,8 +76,26 @@ def close_all_positions(symbol, trading_company):
             place_trade(symbol, "SELL", vol, 0, 0, tick.bid, trading_company)
         elif pos.type == mt5.POSITION_TYPE_SELL:
             place_trade(symbol, "BUY", vol, 0, 0, tick.ask, trading_company)
+
+def get_h4_direction_and_atr(symbol):
+    # Fetch last 20 bars
+    rates = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_H4, 0, 20)
+    if rates is None or len(rates) < 2:
+        return False, 0, 0
     
-def trading_loop_master_slave(instances):
+    df = pd.DataFrame(rates)
+    
+    # Index -2 is the candle that closed at 20:00 HKT
+    last_candle = df.iloc[-2] 
+    
+    is_bullish = last_candle['close'] > last_candle['open']
+    
+    # Calculate ATR
+    df['tr'] = df[['high', 'low', 'close']].apply(lambda x: x.max() - x.min(), axis=1)
+    atr = df['tr'].rolling(14).mean().iloc[-1]
+    
+    return is_bullish, atr, last_candle['close']
+def trading_loop(instances):
 
     master = instances[0]
 
@@ -99,7 +118,7 @@ def trading_loop_master_slave(instances):
     #loop start
     while True:
         now = datetime.now()
-
+        
         #15 minutes loop start
         if now.minute % 15 == 0 and (now.second in (0, 1, 2)):
             if not mt5.initialize(path=master['mt5_path']):
@@ -123,96 +142,35 @@ def trading_loop_master_slave(instances):
                 time.sleep(60)
                 continue
 
-            #check trade count 
-            if trade_count >= 3:
-                print(f"{master['instance_name']}: 已達日內最大交易數，暫停交易")
-                continue
-
-            
-            #session filter
-            if not (7 <= now.hour < 23):
-                print(f"not 7-23")
-                time.sleep(1)
-                continue    
 
             #Strategy start here
 
-            #get h1 data (200 bar)
-            for i ,symbol in enumerate(master['symbol']):
-                rates_h1 = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_H1, 1, 200)
-                close_h1 = [bar['close'] for bar in rates_h1]
-                h1_ema50 = calculate_ema(close_h1, 50)[-1]
-                h1_ema200 = calculate_ema(close_h1, 200)[-1]
+            if now.hour == 9 and now.minute == 15 and now.second == 1:
+                print(f"Triggering trades for {now.date()}")
+                for i, symbol in enumerate(master['symbol']):
+                    signal, h4_atr, price = get_h4_direction_and_atr(symbol)
 
-                #bullish bearish checking on h1
-                is_h1_bullish = h1_ema50 > h1_ema200
-                is_h1_bearish = h1_ema50 < h1_ema200
-
-
-                # get 250 bars of m15 data
-                rates_m15 = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_M15, 1, 250)
-                close_m15 = [bar['close'] for bar in rates_m15]
-                low_m15 = [bar['low'] for bar in rates_m15]
-                high_m15 = [bar['high'] for bar in rates_m15]
-
-                m15_ema50 = calculate_ema(close_m15, 50)
-                m15_ema200 = calculate_ema(close_m15, 200)
-                rsi = calculate_rsi(close_m15, 14)
-                rsi_slope = rsi[-1] - rsi[-2]
-
-                signal = 0
-                curr_low = low_m15[-1]
-                curr_high = high_m15[-1]
-                curr_close = close_m15[-1]
-                curr_ema50 = m15_ema50[-1]
-                curr_rsi = rsi[-1]
-
-                atr14_series = calculate_atr(rates_m15, 14)
-                atr_sma5 = sum(atr14_series[-5:]) / 5
-                is_volatility_rising = atr14_series[-1] > atr14_series[-4]
-
-                print(f"{master['instance_name']} [{symbol}] :[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}]")
-                print(f"H1 EMA 50:{h1_ema50:.2f}, H1 EMA 200: {h1_ema200:.2f}")
-                print(f"M15 EMA 50: {m15_ema50[-1]:.2f}, M15 EMA 200: {m15_ema200[-1]:.2f}")
-
-                # 【多頭入場】
-                # A. 大勢: H1 EMA50 > EMA200
-                # B. 回測: M15 Low 觸碰 EMA50 且 Close 收回上方
-                # C. 動能: RSI 在 45-60 
-                # D. volatility is rising
-                if is_h1_bullish and (m15_ema50[-1] > m15_ema200[-1]):
-                    if curr_low <= curr_ema50 and curr_close > curr_ema50:
-                        if (45 < curr_rsi < 65):
-                            if is_volatility_rising:
-                                signal = 1
-                                print("H1 順勢 + M15 回測成功: 準備買入")
-                                print(f"確認多頭動能: RSI {curr_rsi:.2f}, Slope: {rsi_slope:.2f}")
-
-                # 【空頭入場】
-                # A. 大勢: H1 EMA50 < EMA200
-                # B. 回測: M15 High 觸碰 EMA50 且 Close 收回下方
-                # C. 動能: RSI 在 40-55
-                elif is_h1_bearish and (m15_ema50[-1] < m15_ema200[-1]):
-                    if curr_high >= curr_ema50 and curr_close < curr_ema50:
-                        if (35 < curr_rsi < 60):
-                            if is_volatility_rising:
-                                signal = -1
-                                print("H1 逆勢 + M15 回測成功: 準備放空")
-                                print(f"確認空頭動能: RSI {curr_rsi:.2f}, Slope: {rsi_slope:.2f}")
-
-
-                # 只有 signal 變化時才跟單
-                if signal != 0:
+                    # If it's a Doji or error, skip this symbol entirely
+                    if signal == 0:
+                        print(f"Skipping {symbol}: H4 Bias is Indecisive (Doji) or No Data.")
+                        continue
+                    
                     for instance in instances:
-                        if trade_count < 3:
-                            atr14_val = calculate_atr(rates_m15, 14)[-1]
-                            sl_dist = atr14_val * atr_mult_sl
-                            tp_dist = atr14_val * atr_mult_tp
-                            signal_Granted(instance,instance['symbol'][i], signal,tp_dist,sl_dist)
-                            trade_count += 1
-                    time.sleep(1800)
+                        rates_m15 = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_M15, 1, 250)
+                        atr14_val = calculate_atr(rates_m15, 14)[-1]
+                        atr_sl = atr14_val * atr_mult_sl
+                        
+                        closes = np.array([x['close'] for x in rates_m15])
+                        sigma = np.std(closes[-20:])
+                        sd_sl = sigma * 2
 
+                        sl_dist = max(atr_sl,sd_sl)
+                        tp_dist = sl_dist * 1.1
+                        signal_Granted(instance,instance['symbol'][i], signal,tp_dist,sl_dist)
+        
         time.sleep(1)
+
+
 
 def signal_Granted(instance,symbol, signal,tp_dist, sl_dist):
     """
@@ -272,4 +230,4 @@ def signal_Granted(instance,symbol, signal,tp_dist, sl_dist):
         signal = 0
 
 if __name__ == "__main__":
-    trading_loop_master_slave(instances)
+    trading_loop(instances)
