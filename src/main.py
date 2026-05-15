@@ -20,8 +20,13 @@ position = "None"
 instances = [
     {                                                                       
         'mt5_path': 'C:/Program Files/MetaTrader 5/terminal64.exe',
+<<<<<<< HEAD
         'instance_name': 'FundingPips',
         'symbol': ['GBPUSD', 'EURJPY','XAUUSD'],
+=======
+        'instance_name': 'FXIFY',
+        'symbol': ['GBPUSD.r','EURJPY.r','XAUUSD.r'],
+>>>>>>> eec62a708ea27e12ed27d809e73043f556d1c52d
         'trading_company': 'OANDA',
         'percentage_of_risk': 0.005,
         'position_holding': "None",         
