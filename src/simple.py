@@ -17,13 +17,13 @@ atr_mult_tp = 3.5  #lower 3.5 to 3.0 for better result
 contract_size = 100
 symbol = ""
 position = "None"
-MAX_SLIPPAGE_PIPS = 2.0
+MAX_SLIPPAGE_PIPS = 25.0
 
 instances = [
     {                                                                       
         'mt5_path': 'C:/Program Files/MetaTrader 5/terminal64.exe',
         'instance_name': 'FundingPips',
-        'symbol': ['GBPUSD', 'EURJPY','XAUUSD'],
+        'symbol': ['GBPUSD.x', 'EURJPY.x','XAUUSD.x'],
         'trading_company': 'OANDA',
         'percentage_of_risk': 0.005,
         'position_holding': "None",         
@@ -81,40 +81,20 @@ def close_all_positions(symbol, trading_company):
 
 
 def get_h4_direction_and_atr(symbol):
-    # Fetch last 100 bars (Fixes the ATR NaN glitch by warming up the rolling average)
-    rates = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_H4, 0, 100)
-    if rates is None or len(rates) < 20:
-        return 0, 0, 0  # Return 0 for signal (Error/Skip)
+    rates = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_H4, 0, 5)
     
     df = pd.DataFrame(rates)
+    last_closed_candle = df.iloc[-2]
     
-    # Index -2 is the most recently closed H4 candle
-    last_candle = df.iloc[-2] 
+    open_price = last_closed_candle['open']
+    close_price = last_closed_candle['close']
     
-    # Calculate body size and get point value for the Doji Filter
-    body_size = last_candle['close'] - last_candle['open']
-    symbol_info = mt5.symbol_info(symbol)
-    if symbol_info is None:
-        return 0, 0, 0
-        
-    point = symbol_info.point
-    
-    # DOJI FILTER: Require at least 1.5 pips of body to set a direction
-    # This fixes the account "flipping" glitch on flat candles
-    min_body = 1.5 * point * 10  # Assuming 5-digit pricing format
-    
-    if body_size > min_body:
+    if close_price > open_price:
         signal = 1   # Bullish (BUY)
-    elif body_size < -min_body:
-        signal = -1  # Bearish (SELL)
     else:
-        signal = 0   # Neutral/Doji (SKIP)
+        signal = -1
     
-    # Calculate ATR (14-period)
-    df['tr'] = df[['high', 'low', 'close']].apply(lambda x: x.max() - x.min(), axis=1)
-    atr = df['tr'].rolling(14).mean().iloc[-1]
-    
-    return signal, atr, last_candle['close']
+    return signal
 
 
     
@@ -170,8 +150,12 @@ def trading_loop(instances):
             if now.hour == 9 and now.minute == 15 and now.second == 1:
                 print(f"Triggering trades for {now.date()}")
                 for i, symbol in enumerate(master['symbol']):
-                    is_bullish, h4_atr, price = get_h4_direction_and_atr(symbol)
-                    signal = 1 if is_bullish else -1
+                    h4_signal = get_h4_direction_and_atr(symbol)
+                    signal = 1 if h4_signal == 1 else -1
+
+                    target_tick = mt5.symbol_info_tick(symbol)
+                    req_price = target_tick.ask if signal == 1 else target_tick.bid
+
                     for instance in instances:
                         rates_m15 = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_M15, 1, 250)
                         atr14_val = calculate_atr(rates_m15, 14)[-1]
@@ -180,10 +164,9 @@ def trading_loop(instances):
                         closes = np.array([x['close'] for x in rates_m15])
                         sigma = np.std(closes[-20:])
                         sd_sl = sigma * 2
-
                         sl_dist = max(atr_sl,sd_sl)
                         tp_dist = sl_dist * 1.1
-                        signal_Granted(instance, instance['symbol'][i], signal, tp_dist, sl_dist, price)
+                        signal_Granted(instance, instance['symbol'][i], signal, tp_dist, sl_dist, req_price)
         
         time.sleep(1)
 
@@ -199,7 +182,7 @@ def signal_Granted(instance,symbol, signal,tp_dist, sl_dist, requested_price):
     # 獲取最新的 Tick 數據與 Symbol 規格
     tick = mt5.symbol_info_tick(symbol)
     symbol_info = mt5.symbol_info(symbol)
-
+    point = symbol_info.point
     # --- SLIPPAGE CHECK ---
     current_market_price = tick.ask if signal == 1 else tick.bid
     # Calculate difference in pips
@@ -235,9 +218,6 @@ def signal_Granted(instance,symbol, signal,tp_dist, sl_dist, requested_price):
         lot_raw = risk_amount / (sl_in_ticks * tick_value)
     else:
         lot_raw = symbol_info.volume_min
-
-    if "XAUUSD" in symbol:
-        lot_raw = lot_raw / 100
 
     # 4. 剩餘的 round_to_step 與 min/max 限制保持不變
     lot = round_to_step(lot_raw, symbol_info.volume_step)
