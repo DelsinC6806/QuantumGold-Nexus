@@ -3,12 +3,12 @@ import pandas as pd
 import random
 from datetime import datetime
 
-symbol = "XAUUSD.r"
+symbol = "EURJPY"
 timeframe = mt5.TIMEFRAME_M15
 
 # 需求設定
-bars = 1920*12         # 目標輸出根數
-search_total = 50000   # 先抓這麼多最近K棒（需 >= bars）
+bars = 1920*12       # 目標輸出根數
+search_total = 60000   # 先抓這麼多最近K棒（需 >= bars）
 use_random_start = True
 seed = None  # 可填整數以固定隨機結果，例如 42
 
