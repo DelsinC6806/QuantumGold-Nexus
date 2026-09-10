@@ -1,27 +1,29 @@
 import requests
 import time
-import MetaTrader5 as mt5
+import configparser
 
-# paste your Discord webhook URL here
-DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1518884630080520295/2aDZRvlfehZoEmFLFdWV8e4xIJL_SwusLM-tflVZ27TT72cgPhheUFIDfj4Iox2zdjYb"
+# Load Discord webhook from config.ini
+config = configparser.ConfigParser()
+config.read('/app/config.ini')
 
+DISCORD_WEBHOOK_URL = config.get('discord', 'webhook_url', fallback='')
 
 def send_discord_notification(message):
-    """Helper function to send messages to your private Discord channel."""
-    if not DISCORD_WEBHOOK_URL or "YOUR_WEBHOOK" in DISCORD_WEBHOOK_URL:
-        return  # Skip if URL is not configured
+    """Helper function to send messages to Discord channel."""
+    if not DISCORD_WEBHOOK_URL or "YOUR_WEBHOOK" in DISCORD_WEBHOOK_URL or "[REDACTED]" in DISCORD_WEBHOOK_URL:
+        print(f"[Discord Skipped] {message[:50]}...")
+        return
 
     payload = {"content": message}
     try:
-        response = requests.post(DISCORD_WEBHOOK_URL, json=payload)
+        response = requests.post(DISCORD_WEBHOOK_URL, json=payload, timeout=10)
         if response.status_code != 204:
             print(f"Discord alert failed with status code: {response.status_code}")
     except Exception as e:
         print(f"Failed to send Discord notification: {e}")
 
-
-def place_trade(symbol, action, lot_size, sl_price, tp_price, price, trading_company):
-    """Place a trade on MetaTrader 5 and send Discord alerts."""
+def place_trade(mt5, symbol, action, lot_size, sl_price, tp_price, price, trading_company):
+    """Place a trade on MetaTrader 5 via mt5linux and send Discord alerts."""
     # Define the trade action
     if action.lower() == "buy":
         trade_type = mt5.ORDER_TYPE_BUY
@@ -60,17 +62,10 @@ def place_trade(symbol, action, lot_size, sl_price, tp_price, price, trading_com
             "magic": 123456,
             "comment": "Strategy-based trade",
             "type_time": mt5.ORDER_TIME_GTC,
-            "type_filling": mt5.ORDER_FILLING_IOC,  # Immediate or Cancel filling
+            "type_filling": mt5.ORDER_FILLING_IOC,
         }
 
-    # Print the trade request for debugging
     print("Trade Request:", trade_request)
-
-    if not mt5.initialize():
-        error_msg = f"🚨 **MT5 Error:** Initialization failed.\nDetails: {mt5.last_error()}"
-        print(error_msg)
-        send_discord_notification(error_msg)
-        return False
 
     if not mt5.symbol_select(symbol, True):
         error_msg = f"❌ **MT5 Error:** Failed to select symbol: `{symbol}`"
@@ -102,7 +97,7 @@ def place_trade(symbol, action, lot_size, sl_price, tp_price, price, trading_com
     # Log the trade details to a file
     log_trade(symbol, action, lot_size, sl_price, tp_price, result.price)
 
-    # Success notification via Discord using Markdown formatting
+    # Success notification via Discord
     success_msg = (
         f"✅ **Trade Executed Successfully!**\n"
         f"• **Action:** `{action.upper()}`\n"
@@ -116,7 +111,6 @@ def place_trade(symbol, action, lot_size, sl_price, tp_price, price, trading_com
     send_discord_notification(success_msg)
 
     return True
-
 
 def log_trade(symbol, action, lot_size, sl_price, tp_price, executed_price):
     """Log the trade details to a text file."""
@@ -132,5 +126,5 @@ def log_trade(symbol, action, lot_size, sl_price, tp_price, executed_price):
         f"{'-' * 40}\n"
     )
 
-    with open("trade_log.txt", "a") as log_file:
+    with open("/app/trade_log.txt", "a") as log_file:
         log_file.write(log_entry)

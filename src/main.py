@@ -2,7 +2,6 @@ import MetaTrader5 as mt5
 from datetime import datetime, timezone, timedelta
 import time
 import numpy as np
-import pandas as pd
 from strategy import calculate_ema, calculate_atr, calculate_rsi
 from placetrade import place_trade
 from threading import Thread
@@ -13,25 +12,16 @@ import pandas as pd
 
 fast = 5
 slow = 20
-atr_mult_sl = 2.0
-atr_mult_tp = 5.0   #lower 3.5 to 3.0 for better result
+atr_mult_sl = 1.0
+atr_mult_tp = 2.8   #lower 3.5 to 3.0 for better result
 contract_size = 100
 symbol = ""
 position = "None"
 instances = [
     {                                                                       
         'mt5_path': 'C:/Program Files/MetaTrader 5/terminal64.exe',
-<<<<<<< HEAD
         'instance_name': 'FundingPips',
         'symbol': ['GBPUSD', 'EURJPY','XAUUSD'],
-=======
-        'instance_name': 'FXIFY',
-<<<<<<< HEAD
-        'symbol': ['GBPUSD.x','EURJPY.x','XAUUSD.x'],
-=======
-        'symbol': ['GBPUSD.r','EURJPY.r','XAUUSD.r'],
->>>>>>> eec62a708ea27e12ed27d809e73043f556d1c52d
->>>>>>> 23e428d10d3145a5774d74d79e144bfcd673eb03
         'trading_company': 'OANDA',
         'percentage_of_risk': 0.005,
         'position_holding': "None",         
@@ -86,26 +76,8 @@ def close_all_positions(symbol, trading_company):
             place_trade(symbol, "SELL", vol, 0, 0, tick.bid, trading_company)
         elif pos.type == mt5.POSITION_TYPE_SELL:
             place_trade(symbol, "BUY", vol, 0, 0, tick.ask, trading_company)
-
-def get_h4_direction_and_atr(symbol):
-    # Fetch last 20 bars
-    rates = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_H4, 0, 20)
-    if rates is None or len(rates) < 2:
-        return False, 0, 0
     
-    df = pd.DataFrame(rates)
-    
-    # Index -2 is the candle that closed at 20:00 HKT
-    last_candle = df.iloc[-2] 
-    
-    is_bullish = last_candle['close'] > last_candle['open']
-    
-    # Calculate ATR
-    df['tr'] = df[['high', 'low', 'close']].apply(lambda x: x.max() - x.min(), axis=1)
-    atr = df['tr'].rolling(14).mean().iloc[-1]
-    
-    return is_bullish, atr, last_candle['close']
-def trading_loop(instances):
+def trading_loop_master_slave(instances):
 
     master = instances[0]
 
@@ -152,28 +124,20 @@ def trading_loop(instances):
                 time.sleep(60)
                 continue
 
-<<<<<<< HEAD
-=======
             #check trade count 
             if trade_count >= 3:
                 print(f"{master['instance_name']}: 已達日內最大交易數，暫停交易")
                 continue
->>>>>>> 23e428d10d3145a5774d74d79e144bfcd673eb03
 
             #Strategy start here
 
-            if now.hour == 9 and now.minute == 15 and now.second == 1:
-                print(f"Triggering trades for {now.date()}")
-                for i, symbol in enumerate(master['symbol']):
-                    signal, h4_atr, price = get_h4_direction_and_atr(symbol)
+            #get h1 data (200 bar)
+            for i ,symbol in enumerate(master['symbol']):
+                rates_h1 = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_H1, 1, 200)
+                close_h1 = [bar['close'] for bar in rates_h1]
+                h1_ema50 = calculate_ema(close_h1, 50)[-1]
+                h1_ema200 = calculate_ema(close_h1, 200)[-1]
 
-<<<<<<< HEAD
-                    # If it's a Doji or error, skip this symbol entirely
-                    if signal == 0:
-                        print(f"Skipping {symbol}: H4 Bias is Indecisive (Doji) or No Data.")
-                        continue
-                    
-=======
                 #bullish bearish checking on h1
                 is_h1_bullish = h1_ema50 > h1_ema200
                 is_h1_bearish = h1_ema50 < h1_ema200
@@ -210,6 +174,7 @@ def trading_loop(instances):
                 print(f"H1 EMA 50:{h1_ema50:.2f}, H1 EMA 200: {h1_ema200:.2f}")
                 print(f"M15 EMA 50: {m15_ema50[-1]:.2f}, M15 EMA 200: {m15_ema200[-1]:.2f}")
 
+
                 if is_h1_bullish and (m15_ema50[-1] > m15_ema200[-1]):
                     if curr_low <= curr_ema50 and curr_close > curr_ema50:
                         signal = 1
@@ -217,40 +182,28 @@ def trading_loop(instances):
                 elif is_h1_bearish and (m15_ema50[-1] < m15_ema200[-1]):
                     if curr_high >= curr_ema50 and curr_close < curr_ema50:
                         signal = -1
-
+                
 
                 # 只有 signal 變化時才跟單
                 if signal != 0:
->>>>>>> 23e428d10d3145a5774d74d79e144bfcd673eb03
                     for instance in instances:
-                        rates_m15 = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_M15, 1, 250)
-                        atr14_val = calculate_atr(rates_m15, 14)[-1]
-                        atr_sl = atr14_val * atr_mult_sl
-                        
-                        closes = np.array([x['close'] for x in rates_m15])
-                        sigma = np.std(closes[-20:])
-                        sd_sl = sigma * 2
+                        if trade_count < 3:
+                            atr14_val = calculate_atr(rates_m15, 14)[-1]
+                            sl_dist = atr14_val * atr_mult_sl
+                            tp_dist = atr14_val * atr_mult_tp
+                            signal_Granted(instance,instance['symbol'][i], signal,tp_dist,sl_dist)
+                            trade_count += 1
+                    time.sleep(1800)
 
-                        sl_dist = max(atr_sl,sd_sl)
-                        tp_dist = sl_dist * 1.1
-                        signal_Granted(instance,instance['symbol'][i], signal,tp_dist,sl_dist)
-        
         time.sleep(1)
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 23e428d10d3145a5774d74d79e144bfcd673eb03
 def signal_Granted(instance,symbol, signal,tp_dist, sl_dist):
-    """
-    執行基於信號的交易，具備精確的 0.5% 風險控制與 XAUUSD 規格修正。
-    """
+
     if not mt5.initialize(path=instance['mt5_path']):
         print(f"initialize() failed for {instance['instance_name']}")
         return
     
-    # 獲取最新的 Tick 數據與 Symbol 規格
     tick = mt5.symbol_info_tick(symbol)
     symbol_info = mt5.symbol_info(symbol)
 
@@ -259,31 +212,24 @@ def signal_Granted(instance,symbol, signal,tp_dist, sl_dist):
         print(f"{instance['instance_name']}: 交易未啟用")
         return
     
-    # --- 1. 計算進場價與止損空間 ---
-    # 如果外部沒傳入距離，預設使用 ATR (SL=1.5x, TP=3.5x)
     balance = account_info.balance
     risk_amount = balance * instance['percentage_of_risk']
     print(f"Risk amount : {risk_amount}")
 
-    # 1. 獲取當前品種的 Tick 資訊
-    tick_size = symbol_info.trade_tick_size    # 最小跳動 (如 0.001 或 0.00001)
-    tick_value = symbol_info.trade_tick_value  # 每一跳動值多少美金 (MT5 自動換算)
+    tick_size = symbol_info.trade_tick_size    
+    tick_value = symbol_info.trade_tick_value
     print(f"Symbol: {symbol}")
     print(f"Tick Value: {tick_value}")
     print(f"Tick Size: {tick_value}")
     print(f"Contract Size: {symbol_info.volume_step}")
-    # 2. 計算這筆止損總共包含多少個 Tick (點數)
-    # sl_dist 是你的 1.0 ATR 距離
+
     sl_in_ticks = sl_dist / tick_size
 
-    # 3. 計算正確手數
-    # 公式：風險美金 / (總點數 * 每點美金價值)
     if sl_in_ticks > 0 and tick_value > 0:
         lot_raw = risk_amount / (sl_in_ticks * tick_value)
     else:
         lot_raw = symbol_info.volume_min
 
-    # 4. 剩餘的 round_to_step 與 min/max 限制保持不變
     lot = round_to_step(lot_raw, symbol_info.volume_step)
     lot = round(lot, 2)
 
@@ -305,4 +251,4 @@ def signal_Granted(instance,symbol, signal,tp_dist, sl_dist):
         signal = 0
 
 if __name__ == "__main__":
-    trading_loop(instances)
+    trading_loop_master_slave(instances)
