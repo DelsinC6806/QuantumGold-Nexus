@@ -2435,3 +2435,57 @@ Stop-Loss: 178.21
 Take-Profit: 178.73
 Timestamp: 2026-09-09 20:00:01
 ----------------------------------------
+Trade Executed:
+Symbol: EURJPY
+Action: BUY
+Lot Size: 1.32
+Executed Price: 179.093
+Stop-Loss: 178.68
+Take-Profit: 179.55
+Timestamp: 2026-09-10 20:00:00
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY
+Action: SELL
+Lot Size: 1.38
+Executed Price: 178.539
+Stop-Loss: 178.93
+Take-Profit: 178.11
+Timestamp: 2026-09-11 20:00:00
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY
+Action: BUY
+Lot Size: 3.22
+Executed Price: 178.514
+Stop-Loss: 178.34
+Take-Profit: 178.7
+Timestamp: 2026-09-14 20:00:01
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY
+Action: BUY
+Lot Size: 3.17
+Executed Price: 178.752
+Stop-Loss: 178.58
+Take-Profit: 178.94
+Timestamp: 2026-09-15 20:00:00
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY
+Action: BUY
+Lot Size: 0.81
+Executed Price: 180.91
+Stop-Loss: 180.22
+Take-Profit: 181.67
+Timestamp: 2026-09-18 20:00:00
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY
+Action: BUY
+Lot Size: 3.13
+Executed Price: 180.655
+Stop-Loss: 180.48
+Take-Profit: 180.85
+Timestamp: 2026-09-21 20:00:00
+----------------------------------------
