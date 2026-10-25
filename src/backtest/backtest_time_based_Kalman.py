@@ -4,8 +4,8 @@ import math
 
 # --- Core Strategy Constants ---
 contract_size = 100
-spread = 0.00015 
-RISK_PER_TRADE_PCT = 0.0075
+spread = 0.00000
+RISK_PER_TRADE_PCT = 0.05
 COMMISSION_PER_LOT = 0.00    
 
 def calculate_atr(highs, lows, closes, window=14):
@@ -142,11 +142,10 @@ def backtest_time_based_single(data, initial_balance=50000):
             
             # --- REPLACED: Direction Decision via Kalman Filter Drift ---
             # Extract historical lookback slice of closes (using 30 candles up to i-1)
-            kalman_lookback = closes[max(0, i-40):i]        
+            kalman_lookback = closes[max(0, i-48):i]        
             # 2. Convert to log space so scale doesn't break the Kalman covariance
             kalman_lookback_log = np.log(kalman_lookback)
             drift = run_kalman_filter_drift(kalman_lookback_log, process_noise=1e-2, measurement_noise=1e-3)
-            
             signal = 1 if drift > 0 else -1
             # -------------------------------------------------------------
             
@@ -156,9 +155,9 @@ def backtest_time_based_single(data, initial_balance=50000):
                 continue
             
             atr_sl = atr_val
-            sd_sl = sigma_val * 2
+            sd_sl = sigma_val * 0.7
             sl_dist = max(atr_sl, sd_sl)
-            tp_dist = sl_dist * 2.2
+            tp_dist = sl_dist * 1.5
             
             risk_cash = balance * RISK_PER_TRADE_PCT
             lot_raw = risk_cash / (sl_dist * contract_size)

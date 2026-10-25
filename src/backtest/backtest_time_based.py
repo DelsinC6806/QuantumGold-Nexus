@@ -116,9 +116,9 @@ def backtest_time_based_single(data, initial_balance=50000):
             
             
             atr_sl = atr_val
-            sd_sl = sigma_val * 2
+            sd_sl = sigma_val * 0.7
             sl_dist = max(atr_sl, sd_sl)
-            tp_dist = sl_dist * 1.2
+            tp_dist = sl_dist * 1.25
             
             risk_cash = balance * RISK_PER_TRADE_PCT
             lot_raw = risk_cash / (sl_dist * contract_size)

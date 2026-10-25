@@ -3,7 +3,7 @@ import time
 import MetaTrader5 as mt5
 
 # paste your Discord webhook URL here
-DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1518884630080520295/2aDZRvlfehZoEmFLFdWV8e4xIJL_SwusLM-tflVZ27TT72cgPhheUFIDfj4Iox2zdjYb"
+DISCORD_WEBHOOK_URL = "https://discordapp.com/api/webhooks/1518886870426321029/7FqXTPv94758dlD2649neXMl7Xkhm_t76P3WsGUF1IIuwUzq9yK2mHJjDTk0U8mhaZFH"
 
 
 def send_discord_notification(message):

@@ -2489,3 +2489,201 @@ Stop-Loss: 180.48
 Take-Profit: 180.85
 Timestamp: 2026-09-21 20:00:00
 ----------------------------------------
+Trade Executed:
+Symbol: EURJPY.x
+Action: SELL
+Lot Size: 1.49
+Executed Price: 178.409
+Stop-Loss: 178.67
+Take-Profit: 178.12
+Timestamp: 2026-09-29 20:00:01
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.x
+Action: BUY
+Lot Size: 1.3
+Executed Price: 178.242
+Stop-Loss: 177.94
+Take-Profit: 178.57
+Timestamp: 2026-09-30 20:00:01
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.x
+Action: SELL
+Lot Size: 0.88
+Executed Price: 178.545
+Stop-Loss: 178.99
+Take-Profit: 178.05
+Timestamp: 2026-10-01 20:00:01
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.x
+Action: SELL
+Lot Size: 1.0
+Executed Price: 177.13
+Stop-Loss: 177.52
+Take-Profit: 176.69
+Timestamp: 2026-10-02 20:00:01
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.x
+Action: BUY
+Lot Size: 0.82
+Executed Price: 177.28
+Stop-Loss: 176.81
+Take-Profit: 177.82
+Timestamp: 2026-10-05 20:00:01
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.x
+Action: BUY
+Lot Size: 0.94
+Executed Price: 178.052
+Stop-Loss: 177.61
+Take-Profit: 178.51
+Timestamp: 2026-10-06 20:00:01
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.x
+Action: SELL
+Lot Size: 0.75
+Executed Price: 176.908
+Stop-Loss: 177.43
+Take-Profit: 176.32
+Timestamp: 2026-10-07 20:00:01
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.x
+Action: SELL
+Lot Size: 2.64
+Executed Price: 176.915
+Stop-Loss: 177.05
+Take-Profit: 176.73
+Timestamp: 2026-10-08 20:00:02
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.x
+Action: SELL
+Lot Size: 1.43
+Executed Price: 177.404
+Stop-Loss: 177.68
+Take-Profit: 177.1
+Timestamp: 2026-10-09 20:00:01
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.x
+Action: SELL
+Lot Size: 2.31
+Executed Price: 177.229
+Stop-Loss: 177.4
+Take-Profit: 177.04
+Timestamp: 2026-10-12 20:00:02
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.x
+Action: SELL
+Lot Size: 1.51
+Executed Price: 176.92
+Stop-Loss: 177.18
+Take-Profit: 176.62
+Timestamp: 2026-10-13 20:00:02
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.x
+Action: BUY
+Lot Size: 4.36
+Executed Price: 177.354
+Stop-Loss: 177.26
+Take-Profit: 177.46
+Timestamp: 2026-10-14 20:00:01
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.x
+Action: SELL
+Lot Size: 1.94
+Executed Price: 176.977
+Stop-Loss: 177.2
+Take-Profit: 176.77
+Timestamp: 2026-10-15 20:00:01
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.x
+Action: BUY
+Lot Size: 1.54
+Executed Price: 177.878
+Stop-Loss: 177.62
+Take-Profit: 178.16
+Timestamp: 2026-10-16 20:00:01
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.x
+Action: SELL
+Lot Size: 1.48
+Executed Price: 177.654
+Stop-Loss: 177.93
+Take-Profit: 177.37
+Timestamp: 2026-10-19 20:00:01
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY.x
+Action: SELL
+Lot Size: 1.34
+Executed Price: 177.294
+Stop-Loss: 177.59
+Take-Profit: 176.97
+Timestamp: 2026-10-20 20:00:01
+----------------------------------------
+Trade Executed:
+Symbol: US500.x
+Action: SELL
+Lot Size: 0.52
+Executed Price: 7647.22
+Stop-Loss: 7654.45
+Take-Profit: 7636.38
+Timestamp: 2026-10-23 20:20:01
+----------------------------------------
+Trade Executed:
+Symbol: US500.x
+Action: SELL
+Lot Size: 0.5
+Executed Price: 7633.97
+Stop-Loss: 7641.49
+Take-Profit: 7622.68
+Timestamp: 2026-10-23 20:50:01
+----------------------------------------
+Trade Executed:
+Symbol: US500.x
+Action: SELL
+Lot Size: 0.45
+Executed Price: 7633.72
+Stop-Loss: 7642.12
+Take-Profit: 7621.12
+Timestamp: 2026-10-23 21:50:17
+----------------------------------------
+Trade Executed:
+Symbol: US500.x
+Action: SELL
+Lot Size: 0.42
+Executed Price: 7634.59
+Stop-Loss: 7643.25
+Take-Profit: 7621.01
+Timestamp: 2026-10-23 22:05:11
+----------------------------------------
+Trade Executed:
+Symbol: US500.x
+Action: SELL
+Lot Size: 0.37
+Executed Price: 7625.22
+Stop-Loss: 7635.94
+Take-Profit: 7610.4
+Timestamp: 2026-10-23 22:35:00
+----------------------------------------
+Trade Executed:
+Symbol: US500.x
+Action: SELL
+Lot Size: 0.33
+Executed Price: 7652.72
+Stop-Loss: 7663.86
+Take-Profit: 7635.38
+Timestamp: 2026-10-23 22:50:01
+----------------------------------------
