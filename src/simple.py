@@ -23,9 +23,9 @@ instances = [
     {                                                                        
         'mt5_path': 'C:/Program Files/MetaTrader 5/terminal64.exe',
         'instance_name': 'FundingPips',
-        'symbol': ['EURJPY'],
+        'symbol': ['EURJPY.x'],
         'trading_company': 'OANDA',
-        'percentage_of_risk': 0.0075,
+        'percentage_of_risk': 0.005,
         'position_holding': "None",         
         'trade_count': 0,
         'magic_numeber': 111111
@@ -125,7 +125,6 @@ def get_h4_direction_and_atr(symbol):
         signal = -1  # Bearish (SELL)
     
     return signal
-
 
 def signal_Granted(instance, symbol, signal, tp_dist, sl_dist, requested_price):
     if not mt5.initialize(path=instance['mt5_path']):
