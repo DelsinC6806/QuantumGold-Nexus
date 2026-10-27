@@ -1,14 +1,15 @@
+import os
 import requests
 import time
 import MetaTrader5 as mt5
 
-# paste your Discord webhook URL here
-DISCORD_WEBHOOK_URL = "https://discordapp.com/api/webhooks/1518886870426321029/7FqXTPv94758dlD2649neXMl7Xkhm_t76P3WsGUF1IIuwUzq9yK2mHJjDTk0U8mhaZFH"
+# Read Discord webhook URL from environment variable
+DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL", "")
 
 
 def send_discord_notification(message):
     """Helper function to send messages to your private Discord channel."""
-    if not DISCORD_WEBHOOK_URL or "YOUR_WEBHOOK" in DISCORD_WEBHOOK_URL:
+    if not DISCORD_WEBHOOK_URL:
         return  # Skip if URL is not configured
 
     payload = {"content": message}
