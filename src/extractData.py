@@ -4,6 +4,7 @@ import zoneinfo
 import MetaTrader5 as mt5
 import pandas as pd
 
+<<<<<<< HEAD
 symbol = "NAS100"
 timeframe = mt5.TIMEFRAME_M15
 
@@ -16,6 +17,16 @@ bars = 1920 * 12  # 目標輸出根數
 search_total = 80000  # 先抓最近 K 棒
 use_random_start = False  # 建議先抓最新資料，確保時間轉換正確
 seed = None
+=======
+symbol = "USTEC.x"
+timeframe = mt5.TIMEFRAME_M15
+
+# 需求設定
+bars = 1920*36     # 目標輸出根數
+search_total = 60000   # 先抓這麼多最近K棒（需 >= bars）
+use_random_start = True
+seed = None  # 可填整數以固定隨機結果，例如 42
+>>>>>>> 1cf10d021c960f17721554d2fc2770fd809f6a5c
 
 if seed is not None:
     random.seed(seed)

@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  quantumgold-nexus:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: quantumgold-nexus-bot
+    environment:
+      TZ: Asia/Hong_Kong
+    volumes:
+      # Mount MT5 program directory (read-only)
+      - "C:/Program Files/MetaTrader 5:/mt5:ro"
+      # Mount MT5 data/profiles directory (read-write for terminals)
+      - "${APPDATA}/MetaQuotes/Terminal:/root/.wine/drive_c/users/root/AppData/Roaming/MetaQuotes/Terminal"
+      # Mount local files for logs and data
+      - ./trade_log.txt:/app/trade_log.txt
+      - ./backtest_trades.csv:/app/backtest_trades.csv
+      - ./config.ini:/app/config.ini
+      - ./src:/app/src
+    # Don't need network isolation—direct file access
+    network_mode: "bridge"
+    restart: unless-stopped
+    stdin_open: true
+    tty: true

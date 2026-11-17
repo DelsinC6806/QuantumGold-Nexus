@@ -32,14 +32,21 @@ instances = [
     {
         "mt5_path": "C:/Program Files/MetaTrader 5/terminal64.exe",
         "instance_name": "FundingPips",
+<<<<<<< HEAD
         "symbol": ["US30","US500","NAS100"],
         "trading_company": "Pepperstone",
         "percentage_of_risk": 0.02,
+=======
+        "symbol": ["USTEC.x", "DJ30.x","US500.x"],
+        "trading_company": "OANDA",
+        "percentage_of_risk": 0.005,
+>>>>>>> 1cf10d021c960f17721554d2fc2770fd809f6a5c
         "trade_count": 0,
         "magic_number": 111111,
     }
 ]
 
+<<<<<<< HEAD
 notified_deals = set()
 
 def check_recently_closed_trades(symbols, magic_number=None):
@@ -48,10 +55,18 @@ def check_recently_closed_trades(symbols, magic_number=None):
     to_time = now_utc + timedelta(hours=6)
 
     deals = mt5.history_deals_get(from_time, to_time)
+=======
+
+def check_recently_closed_trades(symbol, last_check_time):
+    now_utc = datetime.now(timezone.utc)
+    deals = mt5.history_deals_get(last_check_time, now_utc, group=symbol)
+
+>>>>>>> 1cf10d021c960f17721554d2fc2770fd809f6a5c
     if deals is None or len(deals) == 0:
         return
 
     for deal in deals:
+<<<<<<< HEAD
         if deal.ticket in notified_deals:
             continue
         if deal.entry != mt5.DEAL_ENTRY_OUT or deal.symbol not in symbols:
@@ -60,6 +75,11 @@ def check_recently_closed_trades(symbols, magic_number=None):
             continue
 
         notified_deals.add(deal.ticket)
+=======
+        if deal.entry != 1:
+            continue
+
+>>>>>>> 1cf10d021c960f17721554d2fc2770fd809f6a5c
         profit = deal.profit + deal.swap + deal.commission
         deal_type = "BUY (Closed)" if deal.type == mt5.DEAL_TYPE_SELL else "SELL (Closed)"
 
@@ -98,6 +118,7 @@ def round_to_step(volume, step):
     return math.floor(volume / step) * step
 
 
+<<<<<<< HEAD
 def close_all_positions(symbols, trading_company):
     for symbol in symbols:
         positions = mt5.positions_get(symbol=symbol) or []
@@ -113,6 +134,22 @@ def close_all_positions(symbols, trading_company):
                 place_trade(symbol, "SELL", vol, 0, 0, tick.bid, trading_company)
             elif pos.type == mt5.POSITION_TYPE_SELL:
                 place_trade(symbol, "BUY", vol, 0, 0, tick.ask, trading_company)
+=======
+def close_all_positions(symbol, trading_company):
+    positions = mt5.positions_get(symbol=symbol) or []
+    tick = mt5.symbol_info_tick(symbol)
+    if tick is None:
+        return
+
+    for pos in positions:
+        vol = pos.volume
+        if vol <= 0:
+            continue
+        if pos.type == mt5.POSITION_TYPE_BUY:
+            place_trade(symbol, "SELL", vol, 0, 0, tick.bid, trading_company)
+        elif pos.type == mt5.POSITION_TYPE_SELL:
+            place_trade(symbol, "BUY", vol, 0, 0, tick.ask, trading_company)
+>>>>>>> 1cf10d021c960f17721554d2fc2770fd809f6a5c
 
 
 def strategy_signal_for_symbol(symbol):
@@ -125,6 +162,7 @@ def strategy_signal_for_symbol(symbol):
     current_price = closes[-1]
 
     kalman_lookback = closes[max(0, len(closes) - 48) :]
+<<<<<<< HEAD
     if len(kalman_lookback) < 3:
         return 0, None, None
     
@@ -134,6 +172,10 @@ def strategy_signal_for_symbol(symbol):
         process_noise=KALMAN_PROCESS_NOISE,
         measurement_noise=KALMAN_MEASURE_NOISE,
     )
+=======
+    if len(kalman_lookback) < 2:
+        return 0, None, None
+>>>>>>> 1cf10d021c960f17721554d2fc2770fd809f6a5c
 
     drift = run_kalman_filter_2D(
         np.log(kalman_lookback),
@@ -142,10 +184,18 @@ def strategy_signal_for_symbol(symbol):
     )
 
     signal = 0
+<<<<<<< HEAD
     if drift > 0 :
         signal = 1
     elif drift < 0:
         signal = -1
+=======
+    if drift > 0:
+        signal = 1
+    elif drift < 0:
+        signal = -1
+
+>>>>>>> 1cf10d021c960f17721554d2fc2770fd809f6a5c
     if signal == 0:
         return 0, None, None
 
@@ -171,6 +221,7 @@ def strategy_signal_for_symbol(symbol):
 
 
 def signal_Granted(instance, symbol, signal, tp_dist, sl_dist, requested_price):
+<<<<<<< HEAD
     tick = mt5.symbol_info_tick(symbol)
     symbol_info = mt5.symbol_info(symbol)
     if tick is None or symbol_info is None:
@@ -179,11 +230,28 @@ def signal_Granted(instance, symbol, signal, tp_dist, sl_dist, requested_price):
 
     point = symbol_info.point
     digits = symbol_info.digits
+=======
+    if not mt5.initialize(path=instance["mt5_path"]):
+        print(f"initialize() failed for {instance['instance_name']}")
+        return
+
+    tick = mt5.symbol_info_tick(symbol)
+    symbol_info = mt5.symbol_info(symbol)
+    if tick is None or symbol_info is None:
+        print(f"[{instance['instance_name']}] Failed to retrieve tick/symbol info")
+        return
+
+    point = symbol_info.point
+>>>>>>> 1cf10d021c960f17721554d2fc2770fd809f6a5c
     current_market_price = tick.ask if signal == 1 else tick.bid
     price_diff_pips = abs(current_market_price - requested_price) / (point * 10)
 
     if price_diff_pips > MAX_SLIPPAGE_PIPS:
+<<<<<<< HEAD
         print(f"[{instance['instance_name']}] SKIP {symbol}: Slippage too high! ({price_diff_pips:.1f} pips > {MAX_SLIPPAGE_PIPS} pips)")
+=======
+        print(f"[{instance['instance_name']}] SKIP: Slippage too high! ({price_diff_pips:.1f} pips > {MAX_SLIPPAGE_PIPS} pips)")
+>>>>>>> 1cf10d021c960f17721554d2fc2770fd809f6a5c
         return
 
     account_info = mt5.account_info()
@@ -209,6 +277,7 @@ def signal_Granted(instance, symbol, signal, tp_dist, sl_dist, requested_price):
 
     if signal == 1:
         entry_price = tick.ask
+<<<<<<< HEAD
         sl = round(entry_price - sl_dist, digits)
         tp = round(entry_price + tp_dist, digits)
         print(f"[{instance['instance_name']}] Executing BUY {symbol} | Risk: ${risk_amount:.2f} | Lot: {lot:.2f} | SL: {sl} | TP: {tp}")
@@ -219,6 +288,20 @@ def signal_Granted(instance, symbol, signal, tp_dist, sl_dist, requested_price):
         tp = round(entry_price - tp_dist, digits)
         print(f"[{instance['instance_name']}] Executing SELL {symbol} | Risk: ${risk_amount:.2f} | Lot: {lot:.2f} | SL: {sl} | TP: {tp}")
         place_trade(symbol, "SELL", lot, sl, tp, entry_price, instance["trading_company"])
+=======
+        sl = round(entry_price - sl_dist, 2)
+        tp = round(entry_price + tp_dist, 2)
+        print(f"[{instance['instance_name']}] Executing BUY | Risk: ${risk_amount:.2f} | Lot: {lot:.2f} | SL: {sl:.2f} | TP: {tp:.2f}")
+        place_trade(symbol, "BUY", lot, sl, tp, entry_price, instance["trading_company"])
+    elif signal == -1:
+        entry_price = tick.bid
+        sl = round(entry_price + sl_dist, 2)
+        tp = round(entry_price - tp_dist, 2)
+        print(f"[{instance['instance_name']}] Executing SELL | Risk: ${risk_amount:.2f} | Lot: {lot:.2f} | SL: {sl:.2f} | TP: {tp:.2f}")
+        place_trade(symbol, "SELL", lot, sl, tp, entry_price, instance["trading_company"])
+    time.sleep(900)  # Sleep for 15 minutes to prevent multiple trades in the same session
+
+>>>>>>> 1cf10d021c960f17721554d2fc2770fd809f6a5c
 
 def trading_loop(instances):
     master = instances[0]
@@ -227,6 +310,7 @@ def trading_loop(instances):
         print(f"initialize() failed for {master['instance_name']}")
         return
 
+<<<<<<< HEAD
     init_deals = mt5.history_deals_get(
         datetime.now(timezone.utc) - timedelta(hours=12),
         datetime.now(timezone.utc) + timedelta(hours=6),
@@ -270,10 +354,45 @@ def trading_loop(instances):
                     if current_slot_hkt in SYMBOL_BLOCKED_SLOTS_HKT.get(symbol, set()):
                         continue
 
+=======
+    last_history_check = datetime.now(timezone.utc) - timedelta(seconds=10)
+    last_scan_key = None
+
+    while True:
+        now_hkt = datetime.now(HKT_TZ)
+
+        if now_hkt.second % 5 == 0:
+            for symbol in master["symbol"]:
+                check_recently_closed_trades(symbol, last_history_check)
+            last_history_check = datetime.now(timezone.utc)
+
+        if now_hkt.second == 0:
+            if not mt5.initialize(path=master["mt5_path"]):
+                print(f"Re-initializing MT5 failed for {master['instance_name']}")
+                time.sleep(1)
+                continue
+
+            position = get_current_holding(master["symbol"][0])
+
+            if now_hkt.hour == 4 and now_hkt.minute == 45 and position != "None":
+                close_all_positions(master["symbol"][0], master["trading_company"])
+                time.sleep(60)
+                continue
+
+            scan_key = now_hkt.strftime("%Y-%m-%d %H:%M")
+            is_scan_time = current_ts_is_scan_time(now_hkt, start_hour=20, end_hour=23, interval_minutes=15)
+
+            if is_scan_time and scan_key != last_scan_key:
+                last_scan_key = scan_key
+                print(f"Triggering 15-minute scan for {scan_key} HKT")
+
+                for idx, symbol in enumerate(master["symbol"]):
+>>>>>>> 1cf10d021c960f17721554d2fc2770fd809f6a5c
                     if get_current_holding(symbol) != "None":
                         continue
 
                     symbol_info = mt5.symbol_info(symbol)
+<<<<<<< HEAD
                     tick = mt5.symbol_info_tick(symbol)
                     if symbol_info is None or tick is None:
                         continue
@@ -281,6 +400,25 @@ def trading_loop(instances):
                     spread_pips = (tick.ask - tick.bid) / (symbol_info.point * 10)
                     if spread_pips > MAX_ALLOWED_SPREAD_PIPS:
                         print(f"SKIP {symbol}: Spread too wide ({spread_pips:.1f} pips > {MAX_ALLOWED_SPREAD_PIPS} pips)")
+=======
+                    if symbol_info is None:
+                        continue
+
+                    point = symbol_info.point
+                    spread_ok = False
+                    start_time = time.time()
+                    while time.time() - start_time < 300:
+                        tick = mt5.symbol_info_tick(symbol)
+                        if tick is not None:
+                            spread_pips = (tick.ask - tick.bid) / (point * 10)
+                            if spread_pips <= MAX_ALLOWED_SPREAD_PIPS:
+                                spread_ok = True
+                                break
+                        time.sleep(1)
+
+                    if not spread_ok:
+                        print(f"SKIP EXECUTION: Spread did not normalize within 300s.")
+>>>>>>> 1cf10d021c960f17721554d2fc2770fd809f6a5c
                         continue
 
                     signal, sl_dist, tp_dist = strategy_signal_for_symbol(symbol)
@@ -293,6 +431,7 @@ def trading_loop(instances):
                     req_price = target_tick.ask if signal == 1 else target_tick.bid
 
                     for instance in instances:
+<<<<<<< HEAD
                         signal_Granted(
                             instance,
                             instance["symbol"][idx % len(instance["symbol"])],
@@ -301,11 +440,18 @@ def trading_loop(instances):
                             sl_dist,
                             req_price,
                         )
+=======
+                        signal_Granted(instance, instance["symbol"][idx % len(instance["symbol"])], signal, tp_dist, sl_dist, req_price)
+>>>>>>> 1cf10d021c960f17721554d2fc2770fd809f6a5c
 
             elif not is_scan_time:
                 last_scan_key = None
 
+<<<<<<< HEAD
         time.sleep(0.5)
+=======
+        time.sleep(1)
+>>>>>>> 1cf10d021c960f17721554d2fc2770fd809f6a5c
 
 
 if __name__ == "__main__":
