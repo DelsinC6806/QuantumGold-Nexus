@@ -5,11 +5,7 @@ import math
 # ==============================================================================
 #                 OPTIMAL CONFIG + KALMAN FILTER INTEGRATION
 # ==============================================================================
-<<<<<<< HEAD
 RISK_PER_TRADE_PCT = 0.005
-=======
-RISK_PER_TRADE_PCT = 0.05
->>>>>>> 1cf10d021c960f17721554d2fc2770fd809f6a5c
 TARGET_RR_MULTIPLIER = 1.5
 VP_LOOKBACK_BARS = 96
 VP_TARGET_VOL_PCT = 0.68
@@ -18,20 +14,12 @@ SD_MULTIPLIER = .7
 USE_VOLUME_PROFILE = True
 
 # --- Kalman Filter Parameters ---
-<<<<<<< HEAD
-KALMAN_PROCESS_NOISE = 1e-6    # Q: Low Q = smoother trend; High Q = tracks price tighter
-=======
 KALMAN_PROCESS_NOISE = 1e-5     # Q: Low Q = smoother trend; High Q = tracks price tighter
->>>>>>> 1cf10d021c960f17721554d2fc2770fd809f6a5c
 KALMAN_MEASURE_NOISE = 1e-3     # R: High R = filters out M15 spread/wick noise
 # ==============================================================================
 
 CONTRACT_SIZE = 100
-<<<<<<< HEAD
-SPREAD = 0 
-=======
 SPREAD = 0.00015 
->>>>>>> 1cf10d021c960f17721554d2fc2770fd809f6a5c
 COMMISSION_PER_LOT = 0.00    
 move_sl_to_be = False  # Enable breakeven stop-loss refinement
 
@@ -242,11 +230,7 @@ def backtest_kalman_single(data, initial_balance=100000):
                 position = None
 
         # === Kalman-Filtered Entry Logic: scan every 15 minutes from 20:00 to 23:00 HKT ===
-<<<<<<< HEAD
         if current_ts_is_scan_time(ts, start_hour=0, end_hour=24, interval_minutes=5) and position is None:
-=======
-        if current_ts_is_scan_time(ts, start_hour=20, end_hour=23, interval_minutes=15) and position is None:
->>>>>>> 1cf10d021c960f17721554d2fc2770fd809f6a5c
             current_price = curr_candle['open']
             kalman_lookback = closes[max(0, i - 48):i]
             kalman_lookback_log = np.log(kalman_lookback)
@@ -337,11 +321,7 @@ def backtest_kalman_single(data, initial_balance=100000):
     print("===============================================================================")
     print_entry_slot_win_summary(trades)
 
-<<<<<<< HEAD
 def current_ts_is_scan_time(ts, start_hour=0, end_hour=24, interval_minutes=15):
-=======
-def current_ts_is_scan_time(ts, start_hour=20, end_hour=23, interval_minutes=15):
->>>>>>> 1cf10d021c960f17721554d2fc2770fd809f6a5c
     if ts.hour < start_hour or ts.hour > end_hour:
         return False
 
