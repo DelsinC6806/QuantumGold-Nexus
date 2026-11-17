@@ -129,3 +129,4 @@ trade_log.txt
 /src/*.pyc
 /src/dist/
 trade_log.txt
+*.ini

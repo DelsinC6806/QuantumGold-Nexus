@@ -2687,3 +2687,1983 @@ Stop-Loss: 7663.86
 Take-Profit: 7635.38
 Timestamp: 2026-10-23 22:50:01
 ----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: BUY
+Lot Size: 1.0
+Executed Price: 0.0
+Stop-Loss: 7696.41
+Take-Profit: 7719.64
+Timestamp: 2026-10-27 20:15:01
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 29372.09
+Take-Profit: 29522.12
+Timestamp: 2026-10-27 20:45:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 29354.9
+Take-Profit: 29513.9
+Timestamp: 2026-10-27 22:00:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 29412.59
+Take-Profit: 29581.36
+Timestamp: 2026-10-27 22:45:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 52431.11
+Take-Profit: 52593.83
+Timestamp: 2026-10-28 22:00:01
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 52774.68
+Take-Profit: 52877.98
+Timestamp: 2026-10-29 13:45:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 52732.9
+Take-Profit: 52842.4
+Timestamp: 2026-10-29 14:45:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 29485.6
+Take-Profit: 29362.6
+Timestamp: 2026-10-29 16:00:01
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 52807.06
+Take-Profit: 52970.91
+Timestamp: 2026-10-29 16:30:01
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 52793.91
+Take-Profit: 52994.13
+Timestamp: 2026-10-29 17:30:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 52538.49
+Take-Profit: 52239.51
+Timestamp: 2026-10-29 20:00:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 29391.12
+Take-Profit: 29199.57
+Timestamp: 2026-10-30 02:00:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 52316.29
+Take-Profit: 52147.81
+Timestamp: 2026-10-30 02:15:01
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: SELL
+Lot Size: 0.9
+Executed Price: 0.0
+Stop-Loss: 7710.99
+Take-Profit: 7684.27
+Timestamp: 2026-10-30 02:30:02
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: SELL
+Lot Size: 1.0
+Executed Price: 0.0
+Stop-Loss: 7717.02
+Take-Profit: 7692.47
+Timestamp: 2026-10-30 03:45:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 29120.04
+Take-Profit: 28888.69
+Timestamp: 2026-10-30 04:15:01
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: SELL
+Lot Size: 0.7
+Executed Price: 0.0
+Stop-Loss: 7697.05
+Take-Profit: 7664.93
+Timestamp: 2026-10-30 04:30:02
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 29016.51
+Take-Profit: 28748.74
+Timestamp: 2026-10-30 06:45:00
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: SELL
+Lot Size: 0.8
+Executed Price: 0.0
+Stop-Loss: 7678.43
+Take-Profit: 7649.36
+Timestamp: 2026-10-30 07:00:01
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 28879.4
+Take-Profit: 28580.65
+Timestamp: 2026-10-30 09:15:01
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: SELL
+Lot Size: 0.8
+Executed Price: 0.0
+Stop-Loss: 7657.96
+Take-Profit: 7628.06
+Timestamp: 2026-10-30 09:30:01
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 52411.12
+Take-Profit: 52540.32
+Timestamp: 2026-10-30 17:15:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 28761.51
+Take-Profit: 28643.23
+Timestamp: 2026-10-30 18:30:01
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 52416.06
+Take-Profit: 52572.91
+Timestamp: 2026-10-30 19:30:00
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: SELL
+Lot Size: 1.4
+Executed Price: 0.0
+Stop-Loss: 7642.9
+Take-Profit: 7625.4
+Timestamp: 2026-10-30 19:45:01
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 28694.61
+Take-Profit: 28579.84
+Timestamp: 2026-10-30 20:15:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 28748.25
+Take-Profit: 28619.38
+Timestamp: 2026-10-30 22:00:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 52121.21
+Take-Profit: 51932.69
+Timestamp: 2026-10-30 22:15:01
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: SELL
+Lot Size: 1.0
+Executed Price: 0.0
+Stop-Loss: 7613.81
+Take-Profit: 7587.28
+Timestamp: 2026-10-30 22:30:02
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 52234.73
+Take-Profit: 52005.41
+Timestamp: 2026-10-30 23:00:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 28611.38
+Take-Profit: 28384.43
+Timestamp: 2026-10-31 00:00:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 52087.31
+Take-Profit: 51809.54
+Timestamp: 2026-10-31 00:15:01
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: SELL
+Lot Size: 0.7
+Executed Price: 0.0
+Stop-Loss: 7611.81
+Take-Profit: 7576.53
+Timestamp: 2026-10-31 00:30:02
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 28474.18
+Take-Profit: 28237.23
+Timestamp: 2026-10-31 01:00:00
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: SELL
+Lot Size: 0.7
+Executed Price: 0.0
+Stop-Loss: 7591.79
+Take-Profit: 7553.57
+Timestamp: 2026-10-31 01:15:01
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 28301.61
+Take-Profit: 28083.09
+Timestamp: 2026-10-31 02:15:01
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 51738.27
+Take-Profit: 51484.85
+Timestamp: 2026-10-31 02:30:02
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: SELL
+Lot Size: 0.6
+Executed Price: 0.0
+Stop-Loss: 7572.9
+Take-Profit: 7527.4
+Timestamp: 2026-10-31 03:15:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 52244.42
+Take-Profit: 52506.37
+Timestamp: 2026-11-03 01:15:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 28289.18
+Take-Profit: 28024.72
+Timestamp: 2026-11-03 04:00:01
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 28118.28
+Take-Profit: 27835.08
+Timestamp: 2026-11-03 04:45:00
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: SELL
+Lot Size: 0.6
+Executed Price: 0.0
+Stop-Loss: 7573.29
+Take-Profit: 7528.56
+Timestamp: 2026-11-03 05:15:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 28200.78
+Take-Profit: 27941.58
+Timestamp: 2026-11-03 07:30:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: SELL
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 51982.87
+Take-Profit: 51868.19
+Timestamp: 2026-11-03 10:00:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: SELL
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 51908.29
+Take-Profit: 51782.56
+Timestamp: 2026-11-03 11:45:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.3
+Executed Price: 0.0
+Stop-Loss: 27982.14
+Take-Profit: 27879.29
+Timestamp: 2026-11-03 14:15:01
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: SELL
+Lot Size: 2.2
+Executed Price: 0.0
+Stop-Loss: 7535.69
+Take-Profit: 7521.72
+Timestamp: 2026-11-03 14:30:01
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: SELL
+Lot Size: 0.3
+Executed Price: 0.0
+Stop-Loss: 51809.85
+Take-Profit: 51727.72
+Timestamp: 2026-11-03 15:00:01
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: SELL
+Lot Size: 2.1
+Executed Price: 0.0
+Stop-Loss: 7525.32
+Take-Profit: 7510.52
+Timestamp: 2026-11-03 15:15:01
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: SELL
+Lot Size: 0.3
+Executed Price: 0.0
+Stop-Loss: 51783.14
+Take-Profit: 51682.55
+Timestamp: 2026-11-03 15:45:00
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: SELL
+Lot Size: 1.8
+Executed Price: 0.0
+Stop-Loss: 7539.16
+Take-Profit: 7522.51
+Timestamp: 2026-11-03 16:00:01
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: SELL
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 51763.51
+Take-Profit: 51632.23
+Timestamp: 2026-11-03 17:00:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 51710.27
+Take-Profit: 51556.84
+Timestamp: 2026-11-03 19:30:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 51725.02
+Take-Profit: 51574.97
+Timestamp: 2026-11-03 21:15:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 28167.81
+Take-Profit: 28383.28
+Timestamp: 2026-11-04 01:15:01
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: BUY
+Lot Size: 0.9
+Executed Price: 0.0
+Stop-Loss: 7576.9
+Take-Profit: 7606.65
+Timestamp: 2026-11-04 02:45:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: SELL
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 51827.44
+Take-Profit: 51693.59
+Timestamp: 2026-11-04 07:15:01
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: BUY
+Lot Size: 1.0
+Executed Price: 0.0
+Stop-Loss: 7584.31
+Take-Profit: 7609.54
+Timestamp: 2026-11-04 07:30:01
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 51726.26
+Take-Profit: 51560.61
+Timestamp: 2026-11-04 08:30:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 51719.82
+Take-Profit: 51535.27
+Timestamp: 2026-11-04 09:00:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 27831.21
+Take-Profit: 27546.18
+Timestamp: 2026-11-04 09:30:01
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: SELL
+Lot Size: 0.6
+Executed Price: 0.0
+Stop-Loss: 7519.09
+Take-Profit: 7472.37
+Timestamp: 2026-11-04 09:45:01
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 51632.28
+Take-Profit: 51394.08
+Timestamp: 2026-11-04 10:15:01
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: SELL
+Lot Size: 0.4
+Executed Price: 0.0
+Stop-Loss: 7513.68
+Take-Profit: 7457.73
+Timestamp: 2026-11-04 10:30:01
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 27733.35
+Take-Profit: 27241.23
+Timestamp: 2026-11-04 11:15:01
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 51527.39
+Take-Profit: 51286.41
+Timestamp: 2026-11-04 11:30:01
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 51824.45
+Take-Profit: 52153.32
+Timestamp: 2026-11-04 16:00:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 52027.19
+Take-Profit: 52389.21
+Timestamp: 2026-11-04 17:15:00
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: BUY
+Lot Size: 0.5
+Executed Price: 0.0
+Stop-Loss: 7582.65
+Take-Profit: 7637.77
+Timestamp: 2026-11-04 17:30:03
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 28246.88
+Take-Profit: 28465.93
+Timestamp: 2026-11-04 18:00:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 52302.45
+Take-Profit: 52698.83
+Timestamp: 2026-11-04 18:15:01
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: BUY
+Lot Size: 0.5
+Executed Price: 0.0
+Stop-Loss: 7622.88
+Take-Profit: 7679.17
+Timestamp: 2026-11-04 18:30:01
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 28366.05
+Take-Profit: 28590.17
+Timestamp: 2026-11-04 19:00:01
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 52516.86
+Take-Profit: 52979.71
+Timestamp: 2026-11-04 20:30:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 52843.74
+Take-Profit: 53187.14
+Timestamp: 2026-11-04 22:00:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 52959.8
+Take-Profit: 53260.3
+Timestamp: 2026-11-04 22:45:00
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: BUY
+Lot Size: 0.7
+Executed Price: 0.0
+Stop-Loss: 7681.74
+Take-Profit: 7725.39
+Timestamp: 2026-11-04 23:00:01
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 28358.48
+Take-Profit: 28709.03
+Timestamp: 2026-11-05 00:00:01
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 53033.51
+Take-Profit: 53382.98
+Timestamp: 2026-11-05 00:15:02
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 53216.64
+Take-Profit: 53605.04
+Timestamp: 2026-11-05 01:00:00
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: BUY
+Lot Size: 0.5
+Executed Price: 0.0
+Stop-Loss: 7692.44
+Take-Profit: 7749.1
+Timestamp: 2026-11-05 02:15:01
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 53596.35
+Take-Profit: 53707.97
+Timestamp: 2026-11-05 10:45:01
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 53536.78
+Take-Profit: 53664.83
+Timestamp: 2026-11-05 11:15:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 53512.48
+Take-Profit: 53633.78
+Timestamp: 2026-11-05 12:15:01
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 28147.23
+Take-Profit: 27995.66
+Timestamp: 2026-11-05 13:45:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.3
+Executed Price: 0.0
+Stop-Loss: 53627.29
+Take-Profit: 53729.07
+Timestamp: 2026-11-05 14:30:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.3
+Executed Price: 0.0
+Stop-Loss: 53593.46
+Take-Profit: 53689.81
+Timestamp: 2026-11-05 15:00:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 53652.87
+Take-Profit: 53802.94
+Timestamp: 2026-11-05 18:00:01
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 53712.22
+Take-Profit: 53873.92
+Timestamp: 2026-11-05 19:15:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 53755.14
+Take-Profit: 53924.54
+Timestamp: 2026-11-05 21:45:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 27693.39
+Take-Profit: 27414.67
+Timestamp: 2026-11-05 22:45:01
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: SELL
+Lot Size: 0.4
+Executed Price: 0.0
+Stop-Loss: 7593.58
+Take-Profit: 7528.89
+Timestamp: 2026-11-05 23:00:01
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 27155.99
+Take-Profit: 26393.27
+Timestamp: 2026-11-06 00:00:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 52611.18
+Take-Profit: 51626.98
+Timestamp: 2026-11-06 00:15:01
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 7549.67
+Take-Profit: 7375.0
+Timestamp: 2026-11-06 00:30:01
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 27408.99
+Take-Profit: 26453.76
+Timestamp: 2026-11-06 01:00:00
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 7479.34
+Take-Profit: 7285.24
+Timestamp: 2026-11-06 02:15:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 52208.55
+Take-Profit: 50980.42
+Timestamp: 2026-11-06 02:45:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 26696.15
+Take-Profit: 26297.27
+Timestamp: 2026-11-06 05:30:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 26623.3
+Take-Profit: 26203.05
+Timestamp: 2026-11-06 07:30:01
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: SELL
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 50934.97
+Take-Profit: 50760.29
+Timestamp: 2026-11-06 15:30:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 51117.14
+Take-Profit: 50919.3
+Timestamp: 2026-11-06 16:00:01
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 27119.34
+Take-Profit: 27377.24
+Timestamp: 2026-11-06 23:00:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 26896.28
+Take-Profit: 27223.08
+Timestamp: 2026-11-07 00:15:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 51543.88
+Take-Profit: 51784.18
+Timestamp: 2026-11-09 10:00:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 27031.74
+Take-Profit: 27394.89
+Timestamp: 2026-11-09 10:45:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 26796.02
+Take-Profit: 26578.21
+Timestamp: 2026-11-09 16:00:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 26977.86
+Take-Profit: 26755.2
+Timestamp: 2026-11-09 16:30:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 51644.57
+Take-Profit: 51859.64
+Timestamp: 2026-11-09 18:30:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 51777.29
+Take-Profit: 51971.57
+Timestamp: 2026-11-09 19:30:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 51753.7
+Take-Profit: 51946.95
+Timestamp: 2026-11-09 20:15:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 27084.7
+Take-Profit: 27266.7
+Timestamp: 2026-11-09 20:45:01
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 51832.21
+Take-Profit: 52011.69
+Timestamp: 2026-11-09 21:00:01
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 51818.15
+Take-Profit: 52009.78
+Timestamp: 2026-11-09 21:30:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 51898.42
+Take-Profit: 52101.37
+Timestamp: 2026-11-09 22:00:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: BUY
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 27494.54
+Take-Profit: 27657.45
+Timestamp: 2026-11-09 22:45:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 51937.59
+Take-Profit: 52168.62
+Timestamp: 2026-11-09 23:00:01
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: BUY
+Lot Size: 0.7
+Executed Price: 0.0
+Stop-Loss: 7490.53
+Take-Profit: 7538.45
+Timestamp: 2026-11-09 23:15:01
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 27690.1
+Take-Profit: 28162.35
+Timestamp: 2026-11-10 00:00:01
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 52089.14
+Take-Profit: 52355.79
+Timestamp: 2026-11-10 00:15:01
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: BUY
+Lot Size: 0.5
+Executed Price: 0.0
+Stop-Loss: 7489.02
+Take-Profit: 7561.22
+Timestamp: 2026-11-10 00:30:03
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 52263.21
+Take-Profit: 52535.19
+Timestamp: 2026-11-10 01:15:00
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: BUY
+Lot Size: 1.4
+Executed Price: 0.0
+Stop-Loss: 7550.76
+Take-Profit: 7578.61
+Timestamp: 2026-11-10 04:00:01
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.3
+Executed Price: 0.0
+Stop-Loss: 52540.92
+Take-Profit: 52646.12
+Timestamp: 2026-11-10 10:45:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.4
+Executed Price: 0.0
+Stop-Loss: 52583.58
+Take-Profit: 52684.63
+Timestamp: 2026-11-10 13:30:00
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: BUY
+Lot Size: 2.5
+Executed Price: 0.0
+Stop-Loss: 7561.88
+Take-Profit: 7577.93
+Timestamp: 2026-11-10 13:45:01
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.4
+Executed Price: 0.0
+Stop-Loss: 52657.64
+Take-Profit: 52748.54
+Timestamp: 2026-11-10 14:30:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.4
+Executed Price: 0.0
+Stop-Loss: 52627.22
+Take-Profit: 52729.17
+Timestamp: 2026-11-10 15:00:01
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 27613.74
+Take-Profit: 27432.9
+Timestamp: 2026-11-10 22:00:01
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: SELL
+Lot Size: 1.1
+Executed Price: 0.0
+Stop-Loss: 7520.41
+Take-Profit: 7486.39
+Timestamp: 2026-11-10 22:15:01
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 27821.52
+Take-Profit: 27624.47
+Timestamp: 2026-11-10 22:45:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 52205.93
+Take-Profit: 51863.85
+Timestamp: 2026-11-11 00:00:00
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: SELL
+Lot Size: 0.6
+Executed Price: 0.0
+Stop-Loss: 7518.2
+Take-Profit: 7463.7
+Timestamp: 2026-11-11 00:15:01
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 27763.08
+Take-Profit: 27408.13
+Timestamp: 2026-11-11 00:45:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: BUY
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 27937.43
+Take-Profit: 28107.1
+Timestamp: 2026-11-11 09:45:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: BUY
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 28048.98
+Take-Profit: 28196.29
+Timestamp: 2026-11-11 12:00:00
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: BUY
+Lot Size: 2.2
+Executed Price: 0.0
+Stop-Loss: 7563.57
+Take-Profit: 7579.65
+Timestamp: 2026-11-11 13:15:01
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: BUY
+Lot Size: 3.1
+Executed Price: 0.0
+Stop-Loss: 7567.37
+Take-Profit: 7578.44
+Timestamp: 2026-11-11 14:45:01
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: BUY
+Lot Size: 2.5
+Executed Price: 0.0
+Stop-Loss: 7565.14
+Take-Profit: 7578.8
+Timestamp: 2026-11-11 16:15:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: BUY
+Lot Size: 0.3
+Executed Price: 0.0
+Stop-Loss: 28162.17
+Take-Profit: 28258.49
+Timestamp: 2026-11-11 16:45:00
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: BUY
+Lot Size: 2.3
+Executed Price: 0.0
+Stop-Loss: 7568.69
+Take-Profit: 7584.22
+Timestamp: 2026-11-11 17:00:01
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: BUY
+Lot Size: 0.3
+Executed Price: 0.0
+Stop-Loss: 28130.38
+Take-Profit: 28244.68
+Timestamp: 2026-11-11 17:30:00
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: BUY
+Lot Size: 1.9
+Executed Price: 0.0
+Stop-Loss: 7567.24
+Take-Profit: 7585.4
+Timestamp: 2026-11-11 17:45:01
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: BUY
+Lot Size: 0.3
+Executed Price: 0.0
+Stop-Loss: 28172.98
+Take-Profit: 28291.03
+Timestamp: 2026-11-11 19:00:00
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: BUY
+Lot Size: 2.0
+Executed Price: 0.0
+Stop-Loss: 7581.06
+Take-Profit: 7599.4
+Timestamp: 2026-11-11 19:30:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: BUY
+Lot Size: 0.3
+Executed Price: 0.0
+Stop-Loss: 28238.46
+Take-Profit: 28337.55
+Timestamp: 2026-11-11 20:45:01
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: BUY
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 28369.5
+Take-Profit: 28559.5
+Timestamp: 2026-11-12 00:00:01
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: BUY
+Lot Size: 1.2
+Executed Price: 0.0
+Stop-Loss: 7595.51
+Take-Profit: 7625.98
+Timestamp: 2026-11-12 00:15:01
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 28415.21
+Take-Profit: 28625.93
+Timestamp: 2026-11-12 01:15:00
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: BUY
+Lot Size: 1.1
+Executed Price: 0.0
+Stop-Loss: 7618.03
+Take-Profit: 7650.71
+Timestamp: 2026-11-12 01:30:01
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 52453.51
+Take-Profit: 52634.99
+Timestamp: 2026-11-12 02:30:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 52496.04
+Take-Profit: 52635.95
+Timestamp: 2026-11-12 05:30:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.3
+Executed Price: 0.0
+Stop-Loss: 52500.22
+Take-Profit: 52598.17
+Timestamp: 2026-11-12 07:15:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 52565.6
+Take-Profit: 52701.85
+Timestamp: 2026-11-12 10:15:00
+----------------------------------------
+Trade Executed:
+Symbol: US30
+Action: BUY
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 52513.36
+Take-Profit: 52664.96
+Timestamp: 2026-11-12 10:45:01
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.3
+Executed Price: 0.0
+Stop-Loss: 28086.1
+Take-Profit: 27970.7
+Timestamp: 2026-11-12 13:30:00
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD
+Action: SELL
+Lot Size: 0.02
+Executed Price: 0.0
+Stop-Loss: 3977.37
+Take-Profit: 3960.67
+Timestamp: 2026-11-12 13:30:01
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD
+Action: SELL
+Lot Size: 0.02
+Executed Price: 0.0
+Stop-Loss: 3978.19
+Take-Profit: 3961.49
+Timestamp: 2026-11-12 13:45:00
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD
+Action: SELL
+Lot Size: 0.01
+Executed Price: 0.0
+Stop-Loss: 3986.38
+Take-Profit: 3969.08
+Timestamp: 2026-11-12 14:00:00
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD
+Action: SELL
+Lot Size: 0.01
+Executed Price: 0.0
+Stop-Loss: 3967.8
+Take-Profit: 3950.83
+Timestamp: 2026-11-12 15:15:00
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD
+Action: SELL
+Lot Size: 0.01
+Executed Price: 0.0
+Stop-Loss: 3953.75
+Take-Profit: 3934.18
+Timestamp: 2026-11-12 16:30:00
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD
+Action: SELL
+Lot Size: 0.01
+Executed Price: 0.0
+Stop-Loss: 3950.2
+Take-Profit: 3928.8
+Timestamp: 2026-11-12 16:45:00
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD
+Action: SELL
+Lot Size: 0.01
+Executed Price: 0.0
+Stop-Loss: 3937.73
+Take-Profit: 3915.06
+Timestamp: 2026-11-12 17:00:00
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD
+Action: SELL
+Lot Size: 0.01
+Executed Price: 0.0
+Stop-Loss: 3948.87
+Take-Profit: 3921.74
+Timestamp: 2026-11-12 17:30:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 27984.1
+Take-Profit: 27865.3
+Timestamp: 2026-11-12 21:15:00
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: SELL
+Lot Size: 1.4
+Executed Price: 0.0
+Stop-Loss: 7566.1
+Take-Profit: 7543.6
+Timestamp: 2026-11-12 21:15:01
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD
+Action: SELL
+Lot Size: 0.01
+Executed Price: 0.0
+Stop-Loss: 3930.31
+Take-Profit: 3912.22
+Timestamp: 2026-11-12 21:15:02
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 28036.3
+Take-Profit: 27891.9
+Timestamp: 2026-11-12 21:30:00
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: SELL
+Lot Size: 1.3
+Executed Price: 0.0
+Stop-Loss: 7570.2
+Take-Profit: 7547.7
+Timestamp: 2026-11-12 21:30:00
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD
+Action: SELL
+Lot Size: 0.01
+Executed Price: 0.0
+Stop-Loss: 3919.59
+Take-Profit: 3897.57
+Timestamp: 2026-11-12 21:30:01
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 28108.6
+Take-Profit: 27949.8
+Timestamp: 2026-11-12 21:45:00
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: SELL
+Lot Size: 1.2
+Executed Price: 0.0
+Stop-Loss: 7580.6
+Take-Profit: 7555.8
+Timestamp: 2026-11-12 21:45:01
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD
+Action: SELL
+Lot Size: 0.01
+Executed Price: 0.0
+Stop-Loss: 3899.61
+Take-Profit: 3875.62
+Timestamp: 2026-11-12 22:00:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 28296.5
+Take-Profit: 28104.6
+Timestamp: 2026-11-12 22:45:00
+----------------------------------------
+Trade Executed:
+Symbol: US500
+Action: BUY
+Lot Size: 0.5
+Executed Price: 0.0
+Stop-Loss: 7601.4
+Take-Profit: 7656.1
+Timestamp: 2026-11-13 00:45:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: BUY
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 28383.8
+Take-Profit: 28535.7
+Timestamp: 2026-11-13 08:00:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: BUY
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 28411.3
+Take-Profit: 28557.2
+Timestamp: 2026-11-13 10:00:00
+----------------------------------------
+Trade Executed:
+Symbol: BTCUSD
+Action: SELL
+Lot Size: 0.02
+Executed Price: 0.0
+Stop-Loss: 69161.39
+Take-Profit: 67718.46
+Timestamp: 2026-11-13 12:45:00
+----------------------------------------
+Trade Executed:
+Symbol: BTCUSD
+Action: SELL
+Lot Size: 0.01
+Executed Price: 0.0
+Stop-Loss: 68766.35
+Take-Profit: 67071.03
+Timestamp: 2026-11-13 14:00:01
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 28057.9
+Take-Profit: 27880.4
+Timestamp: 2026-11-13 23:00:00
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY
+Action: SELL
+Lot Size: 0.15
+Executed Price: 0.0
+Stop-Loss: 176.429
+Take-Profit: 176.109
+Timestamp: 2026-11-14 00:00:00
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY
+Action: SELL
+Lot Size: 0.14
+Executed Price: 0.0
+Stop-Loss: 176.536
+Take-Profit: 176.201
+Timestamp: 2026-11-14 00:15:00
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY
+Action: SELL
+Lot Size: 0.15
+Executed Price: 0.0
+Stop-Loss: 176.279
+Take-Profit: 175.956
+Timestamp: 2026-11-14 02:15:00
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY
+Action: SELL
+Lot Size: 0.14
+Executed Price: 0.0
+Stop-Loss: 176.248
+Take-Profit: 175.888
+Timestamp: 2026-11-14 05:15:00
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD
+Action: SELL
+Lot Size: 0.02
+Executed Price: 0.0
+Stop-Loss: 3881.25
+Take-Profit: 3868.18
+Timestamp: 2026-11-14 05:30:00
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD
+Action: SELL
+Lot Size: 0.01
+Executed Price: 0.0
+Stop-Loss: 3896.09
+Take-Profit: 3868.37
+Timestamp: 2026-11-16 10:15:00
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD
+Action: SELL
+Lot Size: 0.01
+Executed Price: 0.0
+Stop-Loss: 3882.6
+Take-Profit: 3852.43
+Timestamp: 2026-11-16 11:30:00
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY
+Action: SELL
+Lot Size: 0.25
+Executed Price: 0.0
+Stop-Loss: 175.975
+Take-Profit: 175.767
+Timestamp: 2026-11-16 11:45:00
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY
+Action: SELL
+Lot Size: 0.29
+Executed Price: 0.0
+Stop-Loss: 175.814
+Take-Profit: 175.634
+Timestamp: 2026-11-16 13:15:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 27783.1
+Take-Profit: 27596.1
+Timestamp: 2026-11-16 13:30:00
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY
+Action: SELL
+Lot Size: 0.26
+Executed Price: 0.0
+Stop-Loss: 175.906
+Take-Profit: 175.708
+Timestamp: 2026-11-16 13:30:02
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY
+Action: SELL
+Lot Size: 0.27
+Executed Price: 0.0
+Stop-Loss: 175.812
+Take-Profit: 175.614
+Timestamp: 2026-11-16 13:45:00
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD
+Action: SELL
+Lot Size: 0.01
+Executed Price: 0.0
+Stop-Loss: 3844.85
+Take-Profit: 3825.0
+Timestamp: 2026-11-16 14:00:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 27642.8
+Take-Profit: 27478.3
+Timestamp: 2026-11-16 14:15:00
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD
+Action: SELL
+Lot Size: 0.01
+Executed Price: 0.0
+Stop-Loss: 3861.08
+Take-Profit: 3836.01
+Timestamp: 2026-11-16 14:15:01
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD
+Action: SELL
+Lot Size: 0.01
+Executed Price: 0.0
+Stop-Loss: 3861.93
+Take-Profit: 3834.85
+Timestamp: 2026-11-16 14:30:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 27708.8
+Take-Profit: 27533.1
+Timestamp: 2026-11-16 14:45:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 27733.0
+Take-Profit: 27546.7
+Timestamp: 2026-11-16 15:15:00
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY
+Action: SELL
+Lot Size: 0.22
+Executed Price: 0.0
+Stop-Loss: 175.85
+Take-Profit: 175.606
+Timestamp: 2026-11-16 15:15:01
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY
+Action: SELL
+Lot Size: 0.17
+Executed Price: 0.0
+Stop-Loss: 175.894
+Take-Profit: 175.573
+Timestamp: 2026-11-16 17:00:00
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY
+Action: SELL
+Lot Size: 0.17
+Executed Price: 0.0
+Stop-Loss: 175.802
+Take-Profit: 175.469
+Timestamp: 2026-11-16 18:00:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 27518.3
+Take-Profit: 27390.6
+Timestamp: 2026-11-16 20:30:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 27673.4
+Take-Profit: 27530.2
+Timestamp: 2026-11-16 20:45:00
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY
+Action: SELL
+Lot Size: 0.22
+Executed Price: 0.0
+Stop-Loss: 175.653
+Take-Profit: 175.41
+Timestamp: 2026-11-16 20:45:01
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY
+Action: SELL
+Lot Size: 0.22
+Executed Price: 0.0
+Stop-Loss: 175.735
+Take-Profit: 175.493
+Timestamp: 2026-11-16 21:00:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 27594.0
+Take-Profit: 27429.6
+Timestamp: 2026-11-16 21:30:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 27537.1
+Take-Profit: 27301.4
+Timestamp: 2026-11-16 23:00:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 27570.3
+Take-Profit: 27289.6
+Timestamp: 2026-11-17 00:45:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 27418.0
+Take-Profit: 27121.3
+Timestamp: 2026-11-17 02:15:00
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD
+Action: SELL
+Lot Size: 0.01
+Executed Price: 0.0
+Stop-Loss: 3854.64
+Take-Profit: 3832.92
+Timestamp: 2026-11-17 02:15:00
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY
+Action: SELL
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 175.562
+Take-Profit: 175.29
+Timestamp: 2026-11-17 02:15:01
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY
+Action: SELL
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 175.363
+Take-Profit: 175.088
+Timestamp: 2026-11-17 02:45:00
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY
+Action: SELL
+Lot Size: 0.19
+Executed Price: 0.0
+Stop-Loss: 175.487
+Take-Profit: 175.209
+Timestamp: 2026-11-17 03:00:00
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY
+Action: SELL
+Lot Size: 0.2
+Executed Price: 0.0
+Stop-Loss: 175.569
+Take-Profit: 175.301
+Timestamp: 2026-11-17 03:30:00
+----------------------------------------
+Trade Executed:
+Symbol: NAS100
+Action: SELL
+Lot Size: 0.1
+Executed Price: 0.0
+Stop-Loss: 27310.8
+Take-Profit: 27118.7
+Timestamp: 2026-11-17 08:00:00
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD
+Action: SELL
+Lot Size: 0.01
+Executed Price: 0.0
+Stop-Loss: 3875.48
+Take-Profit: 3857.01
+Timestamp: 2026-11-17 09:45:00
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY
+Action: SELL
+Lot Size: 0.26
+Executed Price: 0.0
+Stop-Loss: 175.257
+Take-Profit: 175.049
+Timestamp: 2026-11-17 12:30:00
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY
+Action: SELL
+Lot Size: 0.25
+Executed Price: 0.0
+Stop-Loss: 175.344
+Take-Profit: 175.129
+Timestamp: 2026-11-17 12:45:00
+----------------------------------------
+Trade Executed:
+Symbol: XAUUSD
+Action: BUY
+Lot Size: 0.01
+Executed Price: 0.0
+Stop-Loss: 3872.45
+Take-Profit: 3890.8
+Timestamp: 2026-11-17 13:45:00
+----------------------------------------
+Trade Executed:
+Symbol: EURJPY
+Action: SELL
+Lot Size: 0.24
+Executed Price: 0.0
+Stop-Loss: 175.282
+Take-Profit: 175.062
+Timestamp: 2026-11-17 16:00:00
+----------------------------------------
